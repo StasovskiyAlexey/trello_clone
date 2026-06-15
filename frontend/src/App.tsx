@@ -1,22 +1,22 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
-import ScreenLoader from './components/ScreenLoader'
-import { useCheckAuth } from './hooks/queries/useAuth'
-import { authService } from './services/auth.service'
+import ScreenLoader from './shared/screen-loader'
+import { useCheckAuth } from './app/hooks/queries/useAuth'
+import { authService } from './features/auth/api/auth.service'
 
 const router = createRouter({
 	routeTree,
 	context: {
 		user: null,
-		service: authService
-	}
+		service: authService,
+	},
 })
 
 function App() {
-	const {data: user, isLoading} = useCheckAuth()
+	const { data: user, isLoading } = useCheckAuth()
 
-	if (isLoading)  {
-		return <ScreenLoader/>
+	if (isLoading) {
+		return <ScreenLoader />
 	}
 
 	return (

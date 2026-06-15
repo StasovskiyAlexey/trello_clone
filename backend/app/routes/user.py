@@ -14,7 +14,7 @@ router = APIRouter(prefix='/api/v1/users', tags=['Users'])
 async def me(user: User = Depends(get_current_user)):
   print(user)
   return SuccessResponse(
-    message='Користувач авторизован',
+    message='Пользователь авторизован',
     data=user
   )
 
@@ -49,7 +49,7 @@ async def register_user(response: Response, user_data: UserCreate, service: User
   )
 
   return SuccessResponse(
-    message='Користувач успішно зареєстрован',
+    message='Пользователь успешно зарегистрирован',
     data=new_user
   )
 
@@ -67,7 +67,7 @@ async def login_user(user_data: UserLogin, response: Response, service: UserServ
   )
 
   return SuccessResponse(
-    message='Успішний вхід в аккаунт',
+    message='Успешный вход в аккаунт',
     data=user
   )
 
@@ -82,14 +82,14 @@ async def logout(response: Response, current_user = Depends(get_current_user)):
   )
   
   return SuccessResponse(
-    message='Успішний вихід з аккаунту'
+    message='Успешный выход из аккаунта'
   )
 
 @router.patch('/update_user', response_model=SuccessResponse[UserResponse])
 async def update_user(user_data = Depends(UserUpdate.as_form), service: UserService = Depends(get_user_service), current_user: User = Depends(get_current_user)):
   updated_user = await service.update_user(user_data, current_user)
   return SuccessResponse(
-    message='Користувач успішно оновлен',
+    message='Пользователь успешно обновлен',
     data=updated_user
   )
 
@@ -97,7 +97,7 @@ async def update_user(user_data = Depends(UserUpdate.as_form), service: UserServ
 async def update_user_password(data: UserPasswordRequest, service: UserService = Depends(get_user_service), user: User = Depends(get_current_user)):
   updated_user = await service.update_user_password(user, data.password, data.new_password)
   return SuccessResponse(
-    message='Пароль успішно змінено',
+    message='Пароль успешно изменен',
     data=updated_user
   )
   
@@ -114,7 +114,7 @@ async def delete_user(response: Response, user: User = Depends(get_current_user)
   )
   
   return SuccessResponse(
-    message='Аккаунт успішно видалено',
+    message='Аккаунт успешно удален',
     data=deleted_user
   )
   
@@ -122,42 +122,42 @@ async def delete_user(response: Response, user: User = Depends(get_current_user)
 async def update_user_avatar(avatar_url: UploadFile = File(...), service: UserService = Depends(get_user_service), user = Depends(get_current_user)):
   new_user = await service.update_user_avatar(user.id, avatar_url)
   return SuccessResponse(
-    message='Аватар успішно оновлено',
+    message='Аватар успешно обновлен',
     data=new_user
   )
+
+# @router.post('/test_upload_file',)
+# async def upload_avatar(file: UploadFile = File(...)):
+#   content = await file.read()
+#   # Определяем папку (убедись, что она создана)
+#   folder = "images"
+#   print('file', file)
   
-@router.post('/test_upload_file',)
-async def upload_avatar(file: UploadFile = File(...)):
-  content = await file.read()
-  # Определяем папку (убедись, что она создана)
-  folder = "images"
-  print('file', file)
-  
-  try:
-    # Проверка файла на количество мегабайт
-    if len(content) > 5 * 1024 * 1024:
-      raise AppError(400, 'Файл не повинен бути більше 5 мегабайтів')
+#   try:
+#     # Проверка файла на количество мегабайт
+#     if len(content) > 5 * 1024 * 1024:
+#       raise AppError(400, 'Файл не повинен бути більше 5 мегабайтів')
     
-    if not file.filename:
-      raise AppError(status_code=400, message='Файл не завантажено')
+#     if not file.filename:
+#       raise AppError(status_code=400, message='Файл не завантажено')
     
-    # Создаем путь к файлу
-    file_path = os.path.join(folder, file.filename)
-    print('path', file_path)
+#     # Создаем путь к файлу
+#     file_path = os.path.join(folder, file.filename)
+#     print('path', file_path)
     
-    if os.path.exists(file_path):
-      raise AppError(status_code=400, message='Такой файл уже есть')
+#     if os.path.exists(file_path):
+#       raise AppError(status_code=400, message='Такой файл уже есть')
     
-    # Создаем соеденение с with, он закроет и откроет соеденение сам
-    with open(file_path, "xb") as f:
-      print('file from open', f"{f}") # Логируем для себя
-      f.write(content)
+#     # Создаем соеденение с with, он закроет и откроет соеденение сам
+#     with open(file_path, "xb") as f:
+#       print('file from open', f"{f}") # Логируем для себя
+#       f.write(content)
       
-  except Exception as e:
-    print('e', e)
+#   except Exception as e:
+#     print('e', e)
     
-    raise AppError(500, str(e))
-  finally:
-    await file.close()
+#     raise AppError(500, str(e))
+#   finally:
+#     await file.close()
   
-  return {"status": "ok", "path": file_path}
+#   return {"status": "ok", "path": file_path}

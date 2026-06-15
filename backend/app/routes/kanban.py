@@ -16,7 +16,7 @@ async def get_boards(user: User = Depends(get_current_user), service: KanbanServ
     data=boards
   )
 
-@router.get('/get_board_by_id', response_model=SuccessResponse[BoardResponse])
+@router.post('/get_board_by_id', response_model=SuccessResponse[BoardResponse])
 async def get_board_by_id(board_id: int, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   board = await service.get_board_by_id(user.id, board_id)
   return SuccessResponse(
@@ -27,7 +27,7 @@ async def get_board_by_id(board_id: int, user: User = Depends(get_current_user),
 async def create_board(board: BoardCreate, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   new_board = await service.create_board(user.id, board)
   return SuccessResponse(
-    message='Дошка успішно створено',
+    message='Доска успешно создана',
     data=new_board
   )
   
@@ -35,7 +35,7 @@ async def create_board(board: BoardCreate, user: User = Depends(get_current_user
 async def update_board(board_id: int, board: BoardUpdate, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   updated_board = await service.update_board(user.id, board_id, board)
   return SuccessResponse(
-    message='Дошка успішно оновлено',
+    message='Доска успешно обновлена',
     data=updated_board
   )
   
@@ -43,7 +43,7 @@ async def update_board(board_id: int, board: BoardUpdate, user: User = Depends(g
 async def delete_board(board_id: int, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   deleted_board = await service.delete_board(user.id, board_id)
   return SuccessResponse(
-    message='Дошка успішно видалена',
+    message='Доска успешно удалена',
     data=deleted_board
   )
 
@@ -55,7 +55,7 @@ async def get_columns(board_id: int, user: User = Depends(get_current_user), ser
     data=columns
   )
 
-@router.get('/get_column_by_id', response_model=SuccessResponse[ColumnResponse])
+@router.post('/get_column_by_id', response_model=SuccessResponse[ColumnResponse])
 async def get_column(board_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   column = await service.get_column_by_id(column_id, board_id)
   return SuccessResponse(
@@ -66,7 +66,7 @@ async def get_column(board_id: int, column_id: int, service: KanbanService = Dep
 async def create_column(column_data: ColumnCreate, service: KanbanService = Depends(get_kanban_service)):
   new_column = await service.create_column(column_data)
   return SuccessResponse(
-    message='Нову колонку успішно створено',
+    message='Новую колонку успешно создано',
     data=new_column
   )
   
@@ -74,7 +74,7 @@ async def create_column(column_data: ColumnCreate, service: KanbanService = Depe
 async def update_column(column_id: int, board_id: int, column_data: ColumnUpdate, service: KanbanService = Depends(get_kanban_service)):
   new_column = await service.update_column(column_id, column_data, board_id)
   return SuccessResponse(
-    message='Колонка успішно оновлена',
+    message='Колонка успешно обновлена',
     data=new_column
   )
   
@@ -83,7 +83,6 @@ async def update_order_columns(board_id: int, column_data: ColumnOrdersUpdateLis
   updated_columns = await service.reorder_all_columns(board_id, user.id, column_data)
   print(updated_columns)
   return SuccessResponse(
-    message=f'Усі колонки дошки з ID {board_id} успішно оновлені',
     data=updated_columns
   )
   
@@ -91,7 +90,7 @@ async def update_order_columns(board_id: int, column_data: ColumnOrdersUpdateLis
 async def delete_column(board_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   deleted_column = await service.delete_column(column_id, board_id)
   return SuccessResponse(
-    message='Колонка успішно видалена',
+    message='Колонка успешно удалена',
     data=deleted_column
   )
 
@@ -103,7 +102,7 @@ async def get_cards(board_id: int, column_id: int, service: KanbanService = Depe
     data=cards
   )
   
-@router.get('/get_card_by_id', response_model=SuccessResponse[CardResponse])
+@router.post('/get_card_by_id', response_model=SuccessResponse[CardResponse])
 async def get_card(card_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   card = await service.get_card_by_id(card_id, column_id)
   return SuccessResponse( 
@@ -114,7 +113,7 @@ async def get_card(card_id: int, column_id: int, service: KanbanService = Depend
 async def create_card(card_data: CardCreate, column_id: int, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   new_card = await service.create_card(card_data, column_id, user.id)
   return SuccessResponse(
-    message='Нову картку успішно створено',
+    message='Новую карточку успешно создано',
     data=new_card
   )
   
@@ -122,7 +121,7 @@ async def create_card(card_data: CardCreate, column_id: int, user: User = Depend
 async def update_card(card_id: int, column_id: int, card_data: CardUpdate, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   updated_card = await service.update_card(card_id, column_id, card_data, user.id)
   return SuccessResponse(
-    message='Картку успішно оновлено',
+    message='Карточку успешно создано',
     data=updated_card
   )
   
@@ -130,13 +129,13 @@ async def update_card(card_id: int, column_id: int, card_data: CardUpdate, user:
 async def reoders_cards(column_id: int, new_column_id: int, card_id: int, new_order: int, service: KanbanService = Depends(get_kanban_service)):
   await service.reorders_cards(column_id, new_column_id, card_id, new_order)
   return SuccessResponse(
-    message='Картку успішно оновлено'
+    message='Карточку успешно обновлена'
   )
   
 @router.delete('/delete_card', response_model=SuccessResponse[CardResponse])
 async def delete_card(card_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   deleted_card = await service.delete_card(column_id, card_id)
   return SuccessResponse(
-    message='Картка успішно видалена',
+    message='Карточка успешно удаелна',
     data=deleted_card
   )

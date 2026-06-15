@@ -26,7 +26,7 @@ class UserService:
     existing_user = await self.repository.get_user_by_email(user_data.email)
     
     if existing_user:
-      raise AppError(409, 'Користувача вже зареєстрован')
+      raise AppError(409, 'Пользователь уже зарегистрирован')
 
     hashed_password = hash_password(user_data.password)
     new_user = await self.repository.create_user(user_data, hashed_password)
@@ -38,12 +38,12 @@ class UserService:
     user = await self.repository.get_user_by_login(user_data.login)
     
     if not user:
-      raise AppError(404, 'Користувача не знайдено')
+      raise AppError(404, 'Пользователя не найдено')
     
     decoded_password = verify_password(user_data.password, user.password)
     
     if not decoded_password:
-      raise AppError(400, 'Пароль введено невірно')
+      raise AppError(400, 'Пароль введен неверно')
     
     token = create_token(user.id)
     return user, token
@@ -64,8 +64,8 @@ class UserService:
   async def update_user(self, user_data: UserUpdate, user: User):
     updated_data = user_data.model_dump(exclude_unset=True)
     
-    if not updated_data:
-      raise AppError(400, 'Ніяких даних не було оновлено')
+    # if not updated_data:
+    #   raise AppError(400, 'Ніяких даних не було оновлено')
     
     for key, value in updated_data.items():
       if key == 'password':
@@ -78,13 +78,13 @@ class UserService:
     
   async def update_user_password(self, user: User, password: str, new_password: str):
     if password == new_password:
-      raise AppError(409, 'Введено такий же пароль як і старий')
+      raise AppError(409, 'Пароль похож на предыдущий')
     
     hashed_password = hash_password(new_password)
     verified_password = verify_password(password, user.password)
     
     if not verified_password:
-      raise AppError(500, 'Старий пароль не вірний')
+      raise AppError(500, 'Старый пароль не верный')
     
     user.password = hashed_password
     

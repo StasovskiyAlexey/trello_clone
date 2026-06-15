@@ -5,8 +5,13 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"],
-			"@/components": ["./src/components"],
-			"@/types": ["./src/types"]
+			"@/widgets": ["./src/widgets"],
+			"@/features": ["./src/features"],
+			"@/entities": ["./src/entities"],
+			"@/shared": ["./src/shared"]
 		}
-	}
+	},
+	"experimentalDecorators": true, // ОБЯЗАТЕЛЬНО для @inject
+	"emitDecoratorMetadata": true, // ОБЯЗАТЕЛЬНО для DI
+	"erasableSyntaxOnly": false // Отключаем, чтобы конструктор работал
 }
