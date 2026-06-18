@@ -1,17 +1,22 @@
 import { Settings, LogOut, LayoutDashboard } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { Avatar, AvatarImage, AvatarFallback } from '@/shared/ui/avatar'
 import { getImageUrl } from '@/shared/lib/utils'
-import { useAuthMutations, useCheckAuth } from '@/app/hooks/queries/useAuth'
 import { Button } from '@/shared/ui/button'
+import { useAuth } from '@/app/providers/auth-provider'
 
 export const Sidebar = () => {
-	const { logout } = useAuthMutations()
-	const { data: user } = useCheckAuth()
+	const { user, logout } = useAuth()
+	const location = useLocation()
 
 	const menuItems = [
-		{ icon: Settings, label: 'Настройки', href: '/' },
-		{ icon: LayoutDashboard, label: 'Ваши доски', href: '/boards' },
+		{ icon: Settings, label: 'Настройки', href: '/settings', isActive: location.pathname === `/settings` },
+		{
+			icon: LayoutDashboard,
+			label: 'Ваши доски',
+			href: '/boards',
+			isActive: location.pathname === `/boards` || location.pathname.startsWith('/boards/'),
+		},
 	]
 
 	return (
@@ -32,31 +37,25 @@ export const Sidebar = () => {
 
 			{/* Navigation */}
 			<nav className='mt-4 flex-1 px-4'>
-				<ul className='space-y-1'>
-					{menuItems.map((item) => (
-						<li key={item.label}>
-							<Link
-								to={item.href}
-								activeOptions={{ exact: true }}>
-								{({ isActive }) => (
-									<button
-										className={`group flex w-full items-center gap-3 rounded-md px-4 py-3 text-sm font-medium transition-all duration-200 ${
-											isActive
-												? 'bg-blue-600 text-white shadow-md'
-												: 'text-slate-600 hover:bg-white hover:text-slate-900'
+				<ul className='space-y-2'>
+					{menuItems.map((item) => {
+						return (
+							<li key={item.label}>
+								<Link
+									to={item.href}
+									activeOptions={{ exact: true }}>
+									<Button
+										className={`group flex w-full items-center gap-3 rounded-md bg-gray-100 px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-gray-200 ${
+											item.isActive ? 'bg-blue-600 text-white shadow-md hover:bg-blue-500' : 'text-slate-600'
 										} `}>
-										<item.icon
-											className={`h-5 w-5 shrink-0 ${
-												isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-700'
-											} `}
-										/>
+										<item.icon className={`h-5 w-5 shrink-0 ${item.isActive ? 'text-white' : 'text-black'} `} />
 
 										<span>{item.label}</span>
-									</button>
-								)}
-							</Link>
-						</li>
-					))}
+									</Button>
+								</Link>
+							</li>
+						)
+					})}
 				</ul>
 			</nav>
 

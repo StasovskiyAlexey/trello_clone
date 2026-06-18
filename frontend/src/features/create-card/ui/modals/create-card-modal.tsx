@@ -1,12 +1,12 @@
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui'
 import { AlignLeft, Plus, SquareStack } from 'lucide-react'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
-import { Button } from '../ui/button'
+import { Label } from '@/shared/ui'
+import { Input } from '@/shared/ui'
+import { Textarea } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { useEffect, useState, type FormEvent } from 'react'
-import useModalStore from '@/store/modal.store'
-import { useCardMutations } from '@/entities/card/api/use-cards'
+import { useModal } from '@/app/providers/modal-provider'
+import useCreateCard from '../../api/use-create-card'
 
 export default function CreateCardModal() {
 	const [card, setCard] = useState<{ title: string; description: string }>({
@@ -14,15 +14,15 @@ export default function CreateCardModal() {
 		description: '',
 	})
 
-	const { switcher, modals } = useModalStore()
-	const { createCard } = useCardMutations()
+	const { switcher, modals } = useModal()
+	const { mutate } = useCreateCard()
 
-	const columnId = modals.isOpenCreateCard.data?.columnId
-	const boardId = modals.isOpenCreateCard.data?.boardId
+	const columnId = modals.isOpenCreateCard.props?.columnId
+	const boardId = modals.isOpenCreateCard.props?.boardId
 
 	function handleCreateCard(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
-		createCard({ boardId, data: { title: card.title, description: card.description }, columnId })
+		mutate({ boardId, data: { title: card.title, description: card.description }, columnId })
 		switcher('isOpenCreateCard', false)
 	}
 
@@ -47,9 +47,9 @@ export default function CreateCardModal() {
 								<SquareStack size={22} />
 							</div>
 							<div>
-								<DialogTitle className='text-xl font-bold tracking-tight'>Нове завдання</DialogTitle>
+								<DialogTitle className='text-xl font-bold tracking-tight'>Новая карточка</DialogTitle>
 								<DialogDescription className='text-muted-foreground text-sm'>
-									Опишіть завдання, яке потрібно виконати
+									Опишите карточку, которую хотите создать
 								</DialogDescription>
 							</div>
 						</div>
@@ -61,14 +61,14 @@ export default function CreateCardModal() {
 							<Label
 								htmlFor='card-title'
 								className='ml-1 text-xs font-semibold tracking-widest text-gray-500 uppercase'>
-								Назва завдання
+								Название задания
 							</Label>
 							<Input
 								value={card.title}
 								onChange={(e) => setCard((state) => ({ ...state, title: e.target.value }))}
 								id='card-title'
 								autoFocus
-								placeholder='Що потрібно зробити?'
+								placeholder='Что нужно сделать?'
 								className='h-12 rounded-xl border-gray-200 px-4 text-base transition-all focus-visible:ring-1 focus-visible:ring-blue-500'
 							/>
 						</div>
@@ -83,14 +83,14 @@ export default function CreateCardModal() {
 								<Label
 									htmlFor='card-desc'
 									className='text-xs font-semibold tracking-widest text-gray-500 uppercase'>
-									Опис
+									Описание
 								</Label>
 							</div>
 							<Textarea
 								value={card.description}
 								onChange={(e) => setCard((state) => ({ ...state, description: e.target.value }))}
 								id='card-desc'
-								placeholder="Додайте деталі (необов'язково)..."
+								placeholder='Добавьте детали (необязательно)...'
 								className='min-h-25 resize-none rounded-xl border-gray-200 p-4 transition-all focus-visible:ring-1 focus-visible:ring-blue-500'
 							/>
 						</div>
@@ -102,14 +102,14 @@ export default function CreateCardModal() {
 							type='reset'
 							variant='ghost'
 							className='rounded-xl font-semibold hover:bg-gray-100'>
-							Скасувати
+							Отменить
 						</Button>
 						<Button
 							disabled={!card.title.length}
 							type='submit'
 							className='rounded-xl bg-blue-600 px-6 text-white shadow-lg shadow-blue-200 transition-all hover:bg-blue-700 active:scale-95'>
 							<Plus size={18} />
-							Створити картку
+							Создать карточку
 						</Button>
 					</DialogFooter>
 				</form>

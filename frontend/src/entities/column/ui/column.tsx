@@ -1,18 +1,18 @@
-import { GripVertical, MoreVertical, Plus, SquarePen, Trash } from 'lucide-react'
+import { GripVertical, MoreVertical } from 'lucide-react'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
-	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu'
-import { useColumnMutations } from '@/entities/column/api/use-columns'
-import useModalStore from '@/store/modal.store'
-import type { TColumn } from '@/types/kanban'
-import Card from '../../card/ui/card'
-import { Button } from '@/shared/ui/button'
+} from '@/shared/ui'
+import type { TColumn } from '../model/types'
+import { Card } from '@/entities/card'
 import { memo } from 'react'
 import { Draggable, Droppable } from '@hello-pangea/dnd'
+import { UpdateColumnDropdownItem } from '@/features/update-column'
+import { ColumnDropdownDeleteItem } from '@/features/delete-column'
+import { CreateCardButton } from '@/features/create-card'
 
 function ColumnCard({
 	column,
@@ -25,9 +25,6 @@ function ColumnCard({
 	columnId: number
 	index: number
 }) {
-	const { deleteColumn } = useColumnMutations()
-	const switcher = useModalStore((state) => state.switcher)
-
 	return (
 		<Draggable
 			draggableId={`column-${column?.id}`}
@@ -36,51 +33,58 @@ function ColumnCard({
 				<div
 					ref={provided.innerRef}
 					{...provided.draggableProps}
-					className='flex h-max max-h-180 min-h-20 w-80 shrink-0 flex-col rounded-xl border border-slate-200 bg-slate-100 shadow-sm'>
-					<div className='group flex items-center justify-between p-4'>
-						<div className='flex items-center gap-2'>
-							<div {...provided.dragHandleProps}>
+					className='flex max-h-[80vh] w-72 shrink-0 flex-col rounded-xl border border-slate-200/60 bg-[#f1f2f4] text-slate-800 shadow-sm'>
+					{/* Шапка колонки */}
+					<div className='group flex items-center justify-between p-3 pb-1'>
+						<div className='flex min-w-0 flex-1 items-center gap-1.5'>
+							{/* Иконка перетаскивания колонки */}
+							<div
+								{...provided.dragHandleProps}
+								className='shrink-0'>
 								<GripVertical
 									className='cursor-grab text-slate-400 opacity-0 transition-opacity group-hover:opacity-100'
-									size={16}
+									size={14}
 								/>
 							</div>
-							<h2 className='font-semibold text-slate-700'>{column?.title}</h2>
+							{/* Название колонки */}
+							<h2 className='truncate px-1 py-0.5 text-sm font-semibold text-[#172b4d]'>{column?.title}</h2>
 						</div>
 
+						{/* Меню действий */}
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<button className='p-1 text-gray-400 hover:text-gray-600'>
-									<MoreVertical size={18} />
+								<button className='flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-200/80 hover:text-slate-800'>
+									<MoreVertical size={16} />
 								</button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent>
+							<DropdownMenuContent
+								align='start'
+								className='w-56'>
 								<DropdownMenuGroup>
-									<DropdownMenuItem
-										className='cursor-pointer'
-										onSelect={() => deleteColumn({ columnId, boardId })}>
-										<Trash size={15} /> Видалити колонку
-									</DropdownMenuItem>
-									<DropdownMenuItem
-										className='cursor-pointer'
-										onSelect={() => switcher('isOpenUpdateColumn', true, { column, boardId })}>
-										<SquarePen size={15} /> Оновити колонку
-									</DropdownMenuItem>
+									<UpdateColumnDropdownItem
+										boardId={boardId}
+										column={column}
+									/>
+									<DropdownMenuSeparator />
+									<ColumnDropdownDeleteItem
+										boardId={boardId}
+										columnId={columnId}
+									/>
 								</DropdownMenuGroup>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
 
+					{/* Зона для карточек (Droppable) */}
 					<Droppable
 						droppableId={`column-${column?.id}`}
 						type='card'>
 						{(provided) => (
 							<div
 								ref={provided.innerRef}
-								className='flex-1 space-y-3 overflow-y-auto px-3 pb-3'>
-								{!column?.cards?.length && 'Додайте картку...'}
+								className='custom-scrollbar flex-1 overflow-y-auto px-2 py-1'>
 								<div
-									className='flex flex-col gap-4'
+									className='flex flex-col gap-2 pb-2'
 									{...provided.droppableProps}>
 									{column?.cards &&
 										column?.cards?.map((card, index) => (
@@ -92,18 +96,27 @@ function ColumnCard({
 												index={index}
 											/>
 										))}
+
 									{provided.placeholder}
 								</div>
+
+								{/* Заглушка, если пусто */}
+								{!column?.cards?.length && (
+									<p className='px-2 py-3 text-xs font-medium text-slate-400 italic'>
+										Нет карточек. Добавьте первую...
+									</p>
+								)}
 							</div>
 						)}
 					</Droppable>
 
-					<Button
-						onClick={() => switcher('isOpenCreateCard', true, { columnId, boardId })}
-						className='m-3 flex items-center gap-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm transition-colors hover:bg-indigo-600'>
-						<Plus size={16} />
-						<span>Додати картку</span>
-					</Button>
+					{/* Кнопка «Добавить карточку» внизу колонки */}
+					<div className='p-2 pt-0'>
+						<CreateCardButton
+							columnId={columnId}
+							boardId={boardId}
+						/>
+					</div>
 				</div>
 			)}
 		</Draggable>

@@ -1,16 +1,18 @@
-import { authService } from '@/features/auth/api/auth.service'
+import { AuthService } from '@/features/auth/api/auth.service'
 import type { TUser, TUserLogin, TUserRegister } from '@/entities/user/model/types'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { AxiosError } from 'axios'
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { toast } from 'sonner'
+import { useInjection } from './di-provider'
+import { TTYPES } from '@/shared/di/types'
 
 export type TAuthContext = {
 	login: ({ login, password }: TUserLogin) => void
 	me: () => Promise<TUser | undefined>
 	register: ({ login, email, password }: TUserRegister) => void
 	logout: () => void
-	loading: boolean
+	isLoading: boolean
 	user: TUser | null
 	setUser: React.Dispatch<React.SetStateAction<TUser | null>>
 }
@@ -19,12 +21,14 @@ const AuthContext = createContext<TAuthContext | null>(null)
 
 export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 	const [user, setUser] = useState<TUser | null>(null)
-	const [loading, setLoading] = useState<boolean>(false)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const navigate = useNavigate()
 	const router = useRouter()
 
+	const authService = useInjection<AuthService>(TTYPES.AuthService)
+
 	async function login({ login, password }: TUserLogin) {
-		setLoading(true)
+		setIsLoading(true)
 		try {
 			const res = await authService.login({ login, password })
 
@@ -39,12 +43,12 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 				toast.error(e.response?.data.detail)
 			}
 		} finally {
-			setLoading(false)
+			setIsLoading(false)
 		}
 	}
 
 	async function me() {
-		setLoading(true)
+		setIsLoading(true)
 		try {
 			const res = await authService.me()
 			if (res?.data) {
@@ -55,12 +59,12 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 			setUser(null)
 			console.log(e)
 		} finally {
-			setLoading(false)
+			setIsLoading(false)
 		}
 	}
 
 	async function register({ login, email, password }: TUserRegister) {
-		setLoading(true)
+		setIsLoading(true)
 		try {
 			const res = await authService.register({ login, email, password })
 			setUser(res.data)
@@ -74,12 +78,12 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 				toast.error(e.response?.data.detail)
 			}
 		} finally {
-			setLoading(false)
+			setIsLoading(false)
 		}
 	}
 
 	async function logout() {
-		setLoading(true)
+		setIsLoading(true)
 		try {
 			const res = await authService.logout()
 
@@ -94,7 +98,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 				toast.error(e.response?.data.detail)
 			}
 		} finally {
-			setLoading(false)
+			setIsLoading(false)
 		}
 	}
 
@@ -103,7 +107,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 	}, [])
 
 	return (
-		<AuthContext.Provider value={{ login, me, register, logout, loading, user, setUser }}>
+		<AuthContext.Provider value={{ login, me, register, logout, isLoading, user, setUser }}>
 			{children}
 		</AuthContext.Provider>
 	)

@@ -121,7 +121,7 @@ async def create_card(card_data: CardCreate, column_id: int, user: User = Depend
 async def update_card(card_id: int, column_id: int, card_data: CardUpdate, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   updated_card = await service.update_card(card_id, column_id, card_data, user.id)
   return SuccessResponse(
-    message='Карточку успешно создано',
+    message='Карточка успешно обновлена',
     data=updated_card
   )
   

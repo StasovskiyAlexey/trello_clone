@@ -1,39 +1,27 @@
-import ColumnCard from '@/entities/column/ui/column'
-import ScreenLoader from '@/shared/screen-loader'
 import { Button } from '@/shared/ui/button'
 import { useBoard } from '@/entities/board/api/use-boards'
-import { useColumnMutations } from '@/entities/column/api/use-columns'
-import useModalStore from '@/store/modal.store'
 import { useParams, useRouter } from '@tanstack/react-router'
-import { MoveLeft, Plus } from 'lucide-react'
+import { MoveLeft } from 'lucide-react'
 import { lazy, Suspense } from 'react'
-
-const CreateCardModal = lazy(() => import('@/entities/card/ui/modals/create-card-modal'))
-const CreateColumnModal = lazy(() => import('@/entities/column/ui/modals/create-column-modal'))
-const UpdateCardModal = lazy(() => import('@/entities/card/ui/modals/update-card-modal'))
-const UpdateColumnModal = lazy(() => import('@/entities/column/ui/modals/update-column-modal'))
+import { Column } from '@/entities/column'
 
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
-import type { TColumn } from '@/types/kanban'
+import type { TColumn } from '@/entities/column'
 import { useCardMutations } from '@/entities/card/api/use-cards'
+
+import { CreateColumnBtn } from '@/features/create-column'
 
 export default function BoardDetail() {
 	const boardId = parseInt(useParams({ strict: false }).boardId)
 	const router = useRouter()
 
-	const switcher = useModalStore((state) => state.switcher)
-
 	const { data: board, isLoading, isFetching } = useBoard(boardId)
-	const { reorderColumns } = useColumnMutations()
-	const { reordersCards } = useCardMutations()
-
-	if (isLoading) {
-		return <ScreenLoader />
-	}
+	// const { reorderColumns } = useColumnMutations()
+	// const { reordersCards } = useCardMutations()
 
 	async function handleDragEnd(result: any) {
 		const { destination, source } = result
-		console.log(result)
+		// console.log(result)
 
 		if (!destination) return
 
@@ -42,7 +30,7 @@ export default function BoardDetail() {
 			const [moved] = newColumns.splice(source.index, 1)
 			newColumns.splice(destination.index, 0, moved)
 
-			reorderColumns({ boardId, columns: newColumns })
+			// reorderColumns({ boardId, columns: newColumns })
 		}
 
 		if (result.type === 'card') {
@@ -51,76 +39,70 @@ export default function BoardDetail() {
 			const secondColumnId = Number(destination.droppableId.slice(7))
 			const newOrder = Number(destination.index + 1)
 
-			reordersCards({ columnId: firstColumnId, newColumnId: secondColumnId, cardId, newOrder })
+			// reordersCards({ columnId: firstColumnId, newColumnId: secondColumnId, cardId, newOrder })
 		}
 	}
 
 	return (
 		<>
-			<div className='flex h-full flex-col overflow-hidden'>
-				<header className='sticky top-0 z-10 flex items-center justify-between rounded-xl border-b border-slate-100 bg-white/80 px-4 py-5 backdrop-blur-md'>
+			<section className='board'>
+				<header className='flex shrink-0 items-center justify-between rounded-xl border-b border-white/10 bg-white/10 px-6 py-4 shadow-sm backdrop-blur-md'>
 					<div className='flex items-center gap-4'>
 						<Button
 							variant='ghost'
 							size='icon'
 							onClick={() => router.history.back()}
-							className='h-9 w-9 rounded-full text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-600'>
-							<MoveLeft size={20} />
+							className='rounded-lgtransition-all h-8 w-8'>
+							<MoveLeft size={18} />
 						</Button>
 
 						<div className='flex flex-col'>
-							<h1 className='text-xl font-bold tracking-tight text-slate-900'>{board?.title || 'Завантаження...'}</h1>
+							<h1 className='text-lg font-bold tracking-wide'>{board?.title}</h1>
 						</div>
 					</div>
 
 					<div className='flex items-center gap-3'>
-						<Button
-							onClick={() => switcher('isOpenCreateColumn', true, { boardId })}
-							className='bg-indigo-600 hover:bg-indigo-700'>
-							<Plus
-								size={18}
-								strokeWidth={2.5}
-							/>
-							<span className='text-sm font-semibold'>Додати колонку</span>
-						</Button>
+						<CreateColumnBtn boardId={boardId} />
 					</div>
 				</header>
+
+				{/* Контекст Drag & Drop */}
 				<DragDropContext onDragEnd={handleDragEnd}>
-					<span className='mt-4'>
-						{board?.columns?.length === 0 && `У дошці ${board?.title} немає активних колонок...`}
-					</span>
 					<Droppable
 						type='column'
 						direction='horizontal'
 						droppableId='columns'>
 						{(provided) => (
-							<main
+							// Основная рабочая область. Она занимает ровно ВСЁ оставшееся пространство (flex-1 h-full)
+							<div
 								ref={provided.innerRef}
-								{...provided.droppableProps}
-								className='flex flex-1 items-start gap-6 overflow-x-auto py-4'>
-								{isFetching && <ScreenLoader />}
-								{board?.columns?.map((column, index) => (
-									<ColumnCard
-										column={column}
-										key={column?.id}
-										columnId={column?.id as number}
-										boardId={boardId}
-										index={index}
-									/>
-								))}
+								{...provided.droppableProps}>
+								{/* Заглушка, если колонок ещё нет */}
+								{board?.columns?.length === 0 && (
+									<div className='flex w-full shrink-0 flex-col items-start justify-center rounded-xl border-2 border-dashed border-white/20 bg-white/5 p-4 text-center text-sm font-medium backdrop-blur-sm'>
+										<span>У этой доски ещё нет колонок</span>
+										<span className='mt-1 text-xs text-white/40'>Создайте первую, чтобы начать работу</span>
+									</div>
+								)}
+
+								<div className='mt-6 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'>
+									{board?.columns?.map((column, index) => (
+										<Column
+											column={column}
+											key={column?.id}
+											columnId={column?.id as number}
+											boardId={boardId}
+											index={index}
+										/>
+									))}
+								</div>
+
 								{provided.placeholder}
-							</main>
+							</div>
 						)}
 					</Droppable>
 				</DragDropContext>
-			</div>
-
-			<Suspense fallback={<ScreenLoader />}>
-				<CreateColumnModal />
-				<CreateCardModal />
-				<UpdateColumnModal />
-				<UpdateCardModal />
-			</Suspense>
+			</section>
 		</>
 	)
 }

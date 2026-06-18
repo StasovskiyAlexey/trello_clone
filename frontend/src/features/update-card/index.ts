@@ -1,0 +1,1 @@
+export {default as UpdateCardModal} from './ui/modals/update-card-modal'

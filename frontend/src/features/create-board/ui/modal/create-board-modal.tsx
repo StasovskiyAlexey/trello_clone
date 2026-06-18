@@ -1,25 +1,25 @@
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui'
 import { LayoutPanelTop } from 'lucide-react'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import useModalStore from '@/store/modal.store'
-import { useBoardMutations } from '@/entities/board/api/use-boards'
+import { Label } from '@/shared/ui'
+import { Input } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { useEffect, useState, type FormEvent } from 'react'
-import { useCheckAuth } from '@/app/hooks/queries/useAuth'
+import { useModal } from '@/app/providers/modal-provider'
+import { useAuth } from '@/app/providers/auth-provider'
+import useCreateBoard from '../../api/use-create-board'
 
 export default function CreateBoardModal() {
 	const [board, setBoard] = useState<{ title: string }>({
 		title: '',
 	})
 
-	const { modals, switcher } = useModalStore()
-	const { data: user } = useCheckAuth()
-	const { createBoard } = useBoardMutations()
+	const { modals, switcher } = useModal()
+	const { user } = useAuth()
+	const { mutate } = useCreateBoard()
 
 	function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault()
-		createBoard(board.title)
+		mutate(board.title)
 		switcher('isOpenCreateBoard', false)
 	}
 
@@ -41,9 +41,9 @@ export default function CreateBoardModal() {
 								<LayoutPanelTop size={22} />
 							</div>
 							<div>
-								<DialogTitle className='text-xl font-bold tracking-tight'>Нова дошка</DialogTitle>
+								<DialogTitle className='text-xl font-bold tracking-tight'>Новая доска</DialogTitle>
 								<DialogDescription className='text-muted-foreground text-sm'>
-									Створіть простір для вашого нового проекту
+									Создайте пространство для вашего нового проекта
 								</DialogDescription>
 							</div>
 						</div>
@@ -54,14 +54,14 @@ export default function CreateBoardModal() {
 							<Label
 								htmlFor='create-title'
 								className='ml-1 text-xs tracking-widest text-gray-500 uppercase'>
-								Назва дошки
+								Название доски
 							</Label>
 							<Input
 								value={board.title}
 								onChange={(e) => setBoard((state) => ({ ...state, title: e.target.value }))}
 								id='create-title'
 								autoFocus
-								placeholder='Назва дошки'
+								placeholder='Название доски'
 								className='h-12 rounded-xl border-gray-200 px-4 text-base transition-all focus-visible:ring-1'
 							/>
 						</div>
@@ -73,13 +73,13 @@ export default function CreateBoardModal() {
 							type='reset'
 							variant='ghost'
 							className='rounded-xl font-semibold hover:bg-gray-100'>
-							Скасувати
+							Отменить
 						</Button>
 						<Button
 							disabled={!board.title.length}
 							type='submit'
 							className='rounded-xl bg-indigo-600 px-6 font-bold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-95'>
-							Створити
+							Создать
 						</Button>
 					</DialogFooter>
 				</form>

@@ -1,5 +1,4 @@
 import { queryClient } from "@/shared/lib/query-client"
-import { kanbanService } from "@/services/kanban.service"
 import { useMutation } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router";
 import { AxiosError } from "axios";

@@ -2,11 +2,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs'
 import { useEffect, useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import AuthForm from './auth-form'
-import { useAuthMutations } from '@/app/hooks/queries/useAuth'
+import { useAuth } from '@/app/providers/auth-provider'
 
 const AuthPage = () => {
 	const [activeTab, setActiveTab] = useState<'login' | 'register'>()
-	const { login, register: reg } = useAuthMutations()
+	const { login, register: reg } = useAuth()
 	const { reset } = useForm<{
 		login: string
 		email: string

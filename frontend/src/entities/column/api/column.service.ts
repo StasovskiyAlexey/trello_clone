@@ -1,4 +1,4 @@
-import { axiosClient } from "@/shared/api/client"
+import { axiosClient } from "@/shared/api/axios-client"
 import type { TSuccessResponse } from "@/shared/model/response"
 import type { TColumn } from "../model/types"
 import { inject, injectable } from "inversify"
@@ -16,7 +16,7 @@ export class ColumnService {
   }
 
   async getColumn(boardId?: number, columnId?: number) {
-    return await axiosClient.get<TSuccessResponse<TColumn>>('/kanban/get_column_by_id', {
+    return await this.http.get<TSuccessResponse<TColumn>>('/kanban/get_column_by_id', {
       params: {
         board_id: boardId,
         column_id: columnId
@@ -29,7 +29,7 @@ export class ColumnService {
   }
 
   async updateColumn(title: string, order: number, columnId: number, boardId: number) {
-    return await axiosClient.patch<TSuccessResponse<TColumn>>('/kanban/update_column', {title, order}, {
+    return await this.http.patch<TSuccessResponse<TColumn>>('/kanban/update_column', {title, order}, {
       params: {
         column_id: columnId,
         board_id: boardId
@@ -38,7 +38,7 @@ export class ColumnService {
   }
 
   async reorderColumns(boardId: number, columns: TColumn[]) {
-    return await axiosClient.patch<TSuccessResponse<TColumn[]>>('/kanban/update_order_columns', {columns: columns}, {
+    return await this.http.patch<TSuccessResponse<TColumn[]>>('/kanban/update_order_columns', {columns: columns}, {
       params: {
         board_id: boardId
       }

@@ -1,12 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui'
 import { AlignLeft, Save, SquarePen } from 'lucide-react'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
-import useModalStore from '@/store/modal.store'
-import { Button } from '../ui/button'
-import { useCardMutations } from '@/entities/card/api/use-cards'
+import { Label } from '@/shared/ui'
+import { Input } from '@/shared/ui'
+import { Textarea } from '@/shared/ui'
+import { Button } from '@/shared/ui'
+import { useModal } from '@/app/providers/modal-provider'
+import useUpdateCard from '../../api/use-update-card'
 
 export default function UpdateCardModal() {
 	const [card, setCard] = useState({
@@ -14,15 +14,17 @@ export default function UpdateCardModal() {
 		description: '',
 	})
 
-	const { switcher, modals } = useModalStore()
-	const { updateCard } = useCardMutations()
+	const { switcher, modals } = useModal()
 
-	const cardData = modals.isOpenUpdateCard.data?.card
-	const columnId = modals.isOpenUpdateCard.data?.columnId
+	const boardId: number = modals.isOpenUpdateCard.props?.boardId
+	const cardData = modals.isOpenUpdateCard.props?.card
+	const columnId = modals.isOpenUpdateCard.props?.columnId
+
+	const { mutate } = useUpdateCard({ boardId })
 
 	function handleUpdateCard(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault()
-		updateCard({ columnId, cardId: cardData?.id, data: { title: card.title, description: card.description, order: 1 } })
+		mutate({ columnId, cardId: cardData?.id, data: { title: card.title, description: card.description, order: 1 } })
 		switcher('isOpenUpdateCard', false)
 	}
 
@@ -44,9 +46,9 @@ export default function UpdateCardModal() {
 								<SquarePen size={22} />
 							</div>
 							<div>
-								<DialogTitle className='text-xl font-bold tracking-tight'>Редагувати завдання</DialogTitle>
+								<DialogTitle className='text-xl font-bold tracking-tight'>Редактировать задачу</DialogTitle>
 								<DialogDescription className='text-muted-foreground text-sm'>
-									Оновіть деталі вашого завдання
+									Обновите детали вашего задания
 								</DialogDescription>
 							</div>
 						</div>
@@ -58,14 +60,14 @@ export default function UpdateCardModal() {
 							<Label
 								htmlFor='update-card-title'
 								className='ml-1 text-xs font-semibold tracking-widest text-gray-500 uppercase'>
-								Назва завдання
+								Название задания
 							</Label>
 							<Input
 								value={card.title || ''}
 								onChange={(e) => setCard((prev) => ({ ...prev, title: e.target.value }))}
 								id='update-card-title'
 								autoFocus
-								placeholder='Що потрібно зробити?'
+								placeholder='Что нужно сделать?'
 								className='h-12 rounded-xl border-gray-200 px-4 text-base transition-all focus-visible:ring-1 focus-visible:ring-violet-500'
 							/>
 						</div>
@@ -79,14 +81,14 @@ export default function UpdateCardModal() {
 								<Label
 									htmlFor='update-card-desc'
 									className='text-xs font-semibold tracking-widest text-gray-500 uppercase'>
-									Опис
+									Описание
 								</Label>
 							</div>
 							<Textarea
 								value={card.description || ''}
 								onChange={(e) => setCard((prev) => ({ ...prev, description: e.target.value }))}
 								id='update-card-desc'
-								placeholder='Додайте деталі...'
+								placeholder='Добавьте детали...'
 								className='max-h-120 min-h-25 resize-none overflow-auto rounded-xl border-gray-200 p-4 transition-all focus-visible:ring-1 focus-visible:ring-violet-500'
 							/>
 						</div>
@@ -98,14 +100,14 @@ export default function UpdateCardModal() {
 							type='button'
 							variant='ghost'
 							className='rounded-xl font-semibold hover:bg-gray-100'>
-							Скасувати
+							Отменить
 						</Button>
 						<Button
 							disabled={!card.title?.length}
 							type='submit'
 							className='rounded-xl bg-violet-600 px-6 text-white shadow-lg shadow-violet-200 transition-all hover:bg-violet-700 active:scale-95'>
 							<Save size={18} />
-							Зберегти зміни
+							Сохранить изменения
 						</Button>
 					</DialogFooter>
 				</form>

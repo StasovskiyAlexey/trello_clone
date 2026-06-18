@@ -1,18 +1,18 @@
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui'
 import { Pencil, Save } from 'lucide-react'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import useModalStore from '@/store/modal.store'
+import { Label } from '@/shared/ui'
+import { Input } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { useColumnMutations } from '@/entities/column/api/use-columns'
 import { useEffect, useState, type FormEvent } from 'react'
+import { useModal } from '@/app/providers/modal-provider'
 
 export default function UpdateColumnModal() {
 	const [title, setTitle] = useState('')
-	const { switcher, modals } = useModalStore()
+	const { switcher, modals } = useModal()
 
-	const column = modals.isOpenUpdateColumn.data?.column
-	const boardId = Number(modals.isOpenUpdateColumn.data?.boardId)
+	const column = modals.isOpenUpdateColumn.props?.column
+	const boardId = Number(modals.isOpenUpdateColumn.props?.boardId)
 
 	const { updateColumn } = useColumnMutations()
 
@@ -40,9 +40,9 @@ export default function UpdateColumnModal() {
 								<Pencil size={20} />
 							</div>
 							<div>
-								<DialogTitle className='text-xl font-bold tracking-tight'>Редагувати колонку</DialogTitle>
+								<DialogTitle className='text-xl font-bold tracking-tight'>Редактировать колонку</DialogTitle>
 								<DialogDescription className='text-muted-foreground text-sm'>
-									Змініть назву етапу вашого проекту
+									Измените данные о вашей колонке
 								</DialogDescription>
 							</div>
 						</div>
@@ -53,14 +53,14 @@ export default function UpdateColumnModal() {
 							<Label
 								htmlFor='update-column-title'
 								className='ml-1 text-xs tracking-widest text-gray-500 uppercase'>
-								Назва колонки
+								Название колонки
 							</Label>
 							<Input
 								value={title || ''}
 								onChange={(e) => setTitle(e.target.value)}
 								id='update-column-title'
 								autoFocus
-								placeholder='Введіть назву...'
+								placeholder='Введите название...'
 								className='h-12 rounded-xl border-gray-200 px-4 text-base transition-all focus-visible:ring-1 focus-visible:ring-amber-500'
 							/>
 						</div>
@@ -72,14 +72,14 @@ export default function UpdateColumnModal() {
 							type='button'
 							variant='ghost'
 							className='rounded-xl font-semibold hover:bg-gray-100'>
-							Скасувати
+							Отменить
 						</Button>
 						<Button
 							disabled={!title?.length}
 							type='submit'
 							className='rounded-xl bg-black px-6 text-white shadow-lg transition-all hover:bg-gray-800 active:scale-95'>
 							<Save size={18} />
-							Зберегти
+							Сохранить
 						</Button>
 					</DialogFooter>
 				</form>

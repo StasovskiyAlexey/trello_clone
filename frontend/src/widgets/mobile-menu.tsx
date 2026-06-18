@@ -4,11 +4,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/shared/ui/avatar'
 import { getImageUrl } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/shared/ui/drawer'
-import { useAuthMutations, useCheckAuth } from '@/app/hooks/queries/useAuth'
+import { useAuth } from '@/app/providers/auth-provider'
 
 export default function MobileMenu() {
-	const { logout } = useAuthMutations()
-	const { data: user } = useCheckAuth()
+	const { user, logout } = useAuth()
 
 	const menuItems = [
 		{ icon: Settings, label: 'Налаштування', href: '/settings' },

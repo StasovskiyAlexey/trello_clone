@@ -1,10 +1,14 @@
-import { userService } from "@/entities/user/api/user.service"
-import type { TUpdateUserAvatar, TUpdateUserPassword } from "@/types/user"
+import { UserService } from "./user.service"
+import type { TUpdateUserAvatar, TUpdateUserPassword } from "../model/types"
 import { useMutation } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { toast } from "sonner"
+import { useInjection } from "@/app/providers/di-provider"
+import { TTYPES } from "@/shared/di/types"
 
 export const useUsers = () => {
+  const userService = useInjection<UserService>(TTYPES.UserService)
+
   const updateUserPassword = useMutation({
     mutationFn: (data: TUpdateUserPassword) => userService.updatePassword({password: data.password, newPassword: data.newPassword}),
     onSuccess: (data) => {

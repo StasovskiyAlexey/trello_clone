@@ -11,7 +11,7 @@ export class BoardService {
   }
   
   async getBoard(boardId?: number) {
-    return await this.http.get<TSuccessResponse<TBoard>>('/kanban/get_board_by_id', {
+    return await this.http.post<TSuccessResponse<TBoard>>('/kanban/get_board_by_id', {}, {
       params: {
         board_id: boardId
       }

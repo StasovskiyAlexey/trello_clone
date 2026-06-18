@@ -1,14 +1,14 @@
 import { createContext, type ReactNode, useContext, useState } from 'react'
 
-const modalsMap = {
-  isOpenUpdateBoard: {isOpen: false, props: null},
-  isOpenUpdateAvatar: {isOpen: false, props: null},
-  isOpenCreateBoard: {isOpen: false, props: null},
-  isOpenConfirmModal: {isOpen: false, props: null},
-  isOpenCreateColumn: {isOpen: false, props: null},
-  isOpenUpdateColumn: {isOpen: false, props: null},
-  isOpenCreateCard: {isOpen: false, props: null},
-  isOpenUpdateCard: {isOpen: false, props: null},
+export const modalsMap: Record<string, { isOpen: boolean; props: any }> = {
+	isOpenUpdateBoard: { isOpen: false, props: null },
+	isOpenUpdateAvatar: { isOpen: false, props: null },
+	isOpenCreateBoard: { isOpen: false, props: null },
+	isOpenConfirmModal: { isOpen: false, props: null },
+	isOpenCreateColumn: { isOpen: false, props: null },
+	isOpenUpdateColumn: { isOpen: false, props: null },
+	isOpenCreateCard: { isOpen: false, props: null },
+	isOpenUpdateCard: { isOpen: false, props: null },
 }
 
 type TModalsNames = keyof typeof modalsMap

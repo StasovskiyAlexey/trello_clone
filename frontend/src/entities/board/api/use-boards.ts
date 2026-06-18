@@ -1,13 +1,18 @@
+import { useInjection } from "@/app/providers/di-provider"
+import { TTYPES } from "@/shared/di/types"
 import { queryClient } from "@/shared/lib/query-client"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { AxiosError } from "axios"
 import { toast } from "sonner"
+import { BoardService } from "./board.service"
 
 export const useBoardsList = () => {
+  const boardsService = useInjection<BoardService>(TTYPES.BoardService)
+
   return useQuery({
-    queryKey: ['boards-list'],
-    queryFn: kanbanService.getBoards,
+    queryKey: ['boards'],
+    queryFn: () => boardsService.getBoards(),
     select: (data) => data.data,
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
@@ -16,9 +21,11 @@ export const useBoardsList = () => {
 };
 
 export const useBoard = (boardId?: number) => {
+  const boardsService = useInjection<BoardService>(TTYPES.BoardService)
+
   return useQuery({
-    queryKey: ['board-item', boardId],
-    queryFn: () => kanbanService.getBoard(boardId),
+    queryKey: ['board', boardId],
+    queryFn: () => boardsService.getBoard(boardId),
     enabled: !!boardId,
     select: (data) => data.data,
   });

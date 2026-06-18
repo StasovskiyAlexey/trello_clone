@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './app/routes/__root'
+import { Route as SettingsRouteImport } from './app/routes/settings'
 import { Route as AuthRouteImport } from './app/routes/auth'
 import { Route as IndexRouteImport } from './app/routes/index'
 import { Route as BoardsIndexRouteImport } from './app/routes/boards/index'
 import { Route as BoardsBoardIdRouteImport } from './app/routes/boards/$boardId'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -38,12 +44,14 @@ const BoardsBoardIdRoute = BoardsBoardIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/settings': typeof SettingsRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards/': typeof BoardsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/settings': typeof SettingsRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards': typeof BoardsIndexRoute
 }
@@ -51,26 +59,35 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/settings': typeof SettingsRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards/': typeof BoardsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/boards/$boardId' | '/boards/'
+  fullPaths: '/' | '/auth' | '/settings' | '/boards/$boardId' | '/boards/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/boards/$boardId' | '/boards'
-  id: '__root__' | '/' | '/auth' | '/boards/$boardId' | '/boards/'
+  to: '/' | '/auth' | '/settings' | '/boards/$boardId' | '/boards'
+  id: '__root__' | '/' | '/auth' | '/settings' | '/boards/$boardId' | '/boards/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  SettingsRoute: typeof SettingsRoute
   BoardsBoardIdRoute: typeof BoardsBoardIdRoute
   BoardsIndexRoute: typeof BoardsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  SettingsRoute: SettingsRoute,
   BoardsBoardIdRoute: BoardsBoardIdRoute,
   BoardsIndexRoute: BoardsIndexRoute,
 }

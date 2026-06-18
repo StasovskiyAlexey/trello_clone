@@ -1,27 +1,16 @@
-import BoardCard from '@/entities/board/ui/board-card'
-import ScreenLoader from '@/shared/screen-loader'
-import { Button } from '@/shared/ui/button'
-import { useBoardsList } from '@/entities/board/api/use-boards'
-import useModalStore from '@/store/modal.store'
-import { Plus } from 'lucide-react'
-import { lazy, Suspense } from 'react'
-
-// const UpdateBoardModal = lazy(() => import('@/components/modals/UpdateBoardModal'))
-// const CreateBoardModal = lazy(() => import('@/components/modals/CreateBoardModal'))
+import { BoardCard } from '@/entities/board'
+import { useBoardsList } from '@/entities/board'
+import { CreateBoardBtn } from '@/features/create-board'
+import { Skeleton } from '@/shared/ui'
 
 export default function Boards() {
 	const { data, isLoading } = useBoardsList()
-	const switcher = useModalStore((state) => state.switcher)
-
-	if (isLoading) {
-		return <ScreenLoader />
-	}
 
 	return (
 		<>
-			<div className='mx-auto w-full px-4 font-sans'>
+			<div className='mx-auto w-full'>
 				{/* Шапка рабочей области в стиле Trello */}
-				<header className='sticky top-0 z-10 mb-6 flex items-center justify-between rounded-2xl border border-slate-200/60 bg-white/70 px-6 py-4 shadow-sm backdrop-blur-lg'>
+				<header className='flex shrink-0 items-center justify-between rounded-xl border-b border-white/10 bg-white/10 px-6 py-4 shadow-sm backdrop-blur-md'>
 					<div className='flex items-center gap-3'>
 						{/* Иконка досок перед заголовком */}
 						<div className='rounded-xl bg-blue-50 p-2 text-blue-600'>
@@ -38,22 +27,14 @@ export default function Boards() {
 					</div>
 
 					<div className='flex items-center gap-3'>
-						<Button
-							onClick={() => switcher('isOpenCreateBoard', true)}
-							className='flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 font-medium text-white shadow-sm shadow-blue-100 transition-all hover:bg-blue-700'>
-							<Plus
-								size={16}
-								strokeWidth={3}
-							/>
-							<span className='text-sm font-semibold'>Создать доску</span>
-						</Button>
+						<CreateBoardBtn />
 					</div>
 				</header>
 
 				{/* Сетка досок (Четкая структура вместо flex-wrap) */}
-				<div className='grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+				<div className='mt-6 grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'>
 					{/* Красивое пустое состояние (Empty State) */}
-					{!data?.length && (
+					{!isLoading && !data?.length && (
 						<div className='col-span-full flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-12 text-center'>
 							<div className='mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400'>
 								<svg
@@ -71,27 +52,34 @@ export default function Boards() {
 								</svg>
 							</div>
 							<h3 className='text-sm font-semibold text-slate-700'>Нет активных досок</h3>
-							<p className='mt-1 max-w-[240px] text-xs text-slate-400'>
+							<p className='mt-1 max-w-60 text-xs text-slate-400'>
 								Создайте свою первую доску, чтобы начать структурировать задачи и проекты.
 							</p>
 						</div>
 					)}
 
 					{/* Вывод карточек */}
-					{data &&
-						data.map((board) => (
+					{isLoading ? (
+						<div className='grid h-full w-full grid-cols-[repeat(auto-fill,minmax(380px,1fr))] flex-wrap justify-center gap-4'>
+							{/* <Spinner /> */}
+							{Array.from({ length: 9 }).map((_, i) => (
+								<Skeleton
+									className='h-44 w-full max-w-120 rounded-xl bg-gray-200'
+									key={i}
+								/>
+							))}
+						</div>
+					) : (
+						data &&
+						data?.map((board) => (
 							<BoardCard
 								key={board?.id}
 								board={board}
 							/>
-						))}
+						))
+					)}
 				</div>
 			</div>
-
-			{/* <Suspense fallback={<ScreenLoader/>}>
-        <UpdateBoardModal/>
-        <CreateBoardModal/>
-      </Suspense> */}
 		</>
 	)
 }

@@ -1,0 +1,1 @@
+export {default as UpdateBoardModal} from './ui/modals/update-board-modal'

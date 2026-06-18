@@ -12,7 +12,7 @@ export function getImageUrl(url?: string | null) {
 export function parseData(url?: string) {
   if (!url) return
   const date = new Date(url)
-  return date.toLocaleDateString('uk-UA', {
+  return date.toLocaleDateString('ru-RU', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'

@@ -3,26 +3,30 @@ import { Input } from '@/shared/ui/input'
 import { useEffect, useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 
-function AuthForm({tab, handler, inputs}: {
-	tab: string,
-	handler: SubmitHandler<FieldValues>, 
+function AuthForm({
+	tab,
+	handler,
+	inputs,
+}: {
+	tab: string
+	handler: SubmitHandler<FieldValues>
 	inputs: {
 		label: string
 		errorMessage: string
 		type: string
 		placeholder: string
 	}[]
-	}) {
+}) {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors }, watch
+		formState: { errors },
+		watch,
 	} = useForm()
 
 	const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
 	const values = watch()
-	console.log(values)
 
 	useEffect(() => {
 		if (tab === 'login') {
@@ -36,30 +40,28 @@ function AuthForm({tab, handler, inputs}: {
 		<form
 			className='space-y-5'
 			onSubmit={handleSubmit(handler)}>
-			{inputs.map(input => (
+			{inputs.map((input) => (
 				<div
-				key={input.type}
-				className='space-y-1.5'>
-				<label className='text-sm font-medium text-slate-700 ml-1'>{input.label}</label>
-				<div className='relative'>
-					<Input
-						{...register(input.type, {
-							required: input.errorMessage,
-						})}
-						className='h-11 border-slate-200 focus:border-purple-500 focus:ring-purple-500 rounded-lg transition-all pl-4 text-black'
-						type={input.type === 'password' ? 'password' : 'text'}
-						placeholder={input.placeholder}
-					/>
+					key={input.type}
+					className='space-y-1.5'>
+					<label className='ml-1 text-sm font-medium text-slate-700'>{input.label}</label>
+					<div className='relative'>
+						<Input
+							{...register(input.type, {
+								required: input.errorMessage,
+							})}
+							className='h-11 rounded-lg border-slate-200 pl-4 text-black transition-all focus:border-purple-500 focus:ring-purple-500'
+							type={input.type === 'password' ? 'password' : 'text'}
+							placeholder={input.placeholder}
+						/>
+					</div>
+					{errors[input.type] && <p className='mt-1 ml-1 animate-pulse text-xs text-red-500'>{input.errorMessage}</p>}
 				</div>
-				{errors[input.type] && (
-					<p className='text-red-500 text-xs mt-1 ml-1 animate-pulse'>{input.errorMessage}</p>
-				)}
-			</div>
 			))}
 			<Button
 				disabled={isDisabled}
 				type='submit'
-				className='w-full h-11 font-semibold rounded-lg shadow-lg transition-all'>
+				className='h-11 w-full rounded-lg font-semibold shadow-lg transition-all'>
 				{tab === 'login' ? 'Войти в аккаунт' : 'Создать аккаунт'}
 			</Button>
 		</form>

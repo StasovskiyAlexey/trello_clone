@@ -1,28 +1,28 @@
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui'
 import { Layout, Save } from 'lucide-react'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
+import { Label } from '@/shared/ui'
+import { Input } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { useEffect, useState, type FormEvent } from 'react'
-import { useBoardMutations } from '@/entities/board/api/use-boards'
-import useModalStore from '@/store/modal.store'
+import { useModal } from '@/app/providers/modal-provider'
+import useUpdateBoard from '../../api/use-update-board'
 
 export default function UpdateBoardModal() {
-	const [boardData, setBoardData] = useState<{ title: string; boardId?: number }>({
+	const [boardData, setBoardData] = useState<{ title: string; boardId?: number | null }>({
 		title: '',
-		boardId: 0,
+		boardId: null,
 	})
 
-	const { updateBoard } = useBoardMutations()
-	const { modals, switcher } = useModalStore()
+	const { mutate } = useUpdateBoard()
+	const { modals, switcher } = useModal()
 
-	const board = modals.isOpenUpdateBoard.data?.board
+	const board = modals.isOpenUpdateBoard.props?.board
 	const isOpen = modals.isOpenUpdateBoard.isOpen
 
 	function handleUpdateBoard(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault()
 		if (boardData.boardId && boardData.title.trim()) {
-			updateBoard({ boardId: boardData?.boardId, title: boardData.title.trim() })
+			mutate({ boardId: boardData?.boardId, title: boardData.title.trim() })
 		}
 		switcher('isOpenUpdateBoard', false)
 	}
@@ -47,9 +47,9 @@ export default function UpdateBoardModal() {
 								<Layout size={22} />
 							</div>
 							<div>
-								<DialogTitle className='text-xl font-bold tracking-tight'>Редагувати дошку</DialogTitle>
+								<DialogTitle className='text-xl font-bold tracking-tight'>Редактировать доску</DialogTitle>
 								<DialogDescription className='text-muted-foreground text-sm'>
-									Внесіть зміни в назву вашого робочого простору
+									Внесите изменения в название вашего рабочего пространства
 								</DialogDescription>
 							</div>
 						</div>
@@ -60,13 +60,13 @@ export default function UpdateBoardModal() {
 							<Label
 								htmlFor='title'
 								className='ml-1 text-xs tracking-widest text-gray-500 uppercase'>
-								Назва дошки
+								Название доски
 							</Label>
 							<Input
 								id='title'
 								value={boardData.title}
 								onChange={(e) => setBoardData((state) => ({ ...state, title: e.target.value }))}
-								placeholder='Введіть нову назву...'
+								placeholder='Введите новое название...'
 								className='h-12 rounded-xl border-gray-200 px-4 text-base transition-all focus-visible:ring-1'
 							/>
 						</div>
@@ -78,7 +78,7 @@ export default function UpdateBoardModal() {
 							type='reset'
 							variant='ghost'
 							className='rounded-xl font-semibold hover:bg-gray-100'>
-							Скасувати
+							Отменить
 						</Button>
 						<Button
 							disabled={boardData.title?.length === 0}
@@ -88,7 +88,7 @@ export default function UpdateBoardModal() {
 								size={18}
 								className='mr-2'
 							/>
-							Оновити
+							Обновить
 						</Button>
 					</DialogFooter>
 				</form>

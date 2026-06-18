@@ -13,7 +13,7 @@ class KanbanService:
     board = await self.repository.get_board_by_id(owner_id, board_id)
     
     if not board:
-      raise AppError(400, f'Дошку з ID {board_id} не знайдено')
+      raise AppError(400, f'Доску с ID {board_id} не найдено')
     
     return board
   
@@ -21,7 +21,7 @@ class KanbanService:
     exist_board = await self.repository.get_board_by_title(owner_id, board.title)
 
     if exist_board:
-      raise AppError(400, 'Дошка з такою назвою вже створена')
+      raise AppError(400, 'Доска с таким названием уже создана')
 
     return await self.repository.create_board(owner_id, board)
   
@@ -33,7 +33,7 @@ class KanbanService:
     exist_board = await self.repository.get_board_by_id(owner_id, board_id)
     
     if exist_board is None:
-      raise AppError(400, f'Дошки з ID {board_id} не існує')
+      raise AppError(400, f'Доски C ID {board_id} не существует')
     
     return await self.repository.delete_board(exist_board)
   
@@ -42,7 +42,7 @@ class KanbanService:
     board = await self.repository.get_board_by_id(owner_id, board_id)
     
     if board is None:
-      raise AppError(400, f'Дошки з ID {board_id} не знайдено')
+      raise AppError(400, f'Доску с ID {board_id} не найдено')
     
     return await self.repository.get_all_columns(board_id)
   
@@ -51,7 +51,7 @@ class KanbanService:
     exist_column = await self.repository.get_column_by_id(column_id, board_id)
     
     if not exist_column:
-      raise AppError(400, f'Колонку з ID {column_id} не знайдено')
+      raise AppError(400, f'Колонку с ID {column_id} не найдено')
     
     return exist_column
   
@@ -62,7 +62,7 @@ class KanbanService:
     exist_column = await self.repository.get_column_by_title(column.title, column.board_id)
     
     if exist_column:
-      raise AppError(400, 'Така колонка вже існує')
+      raise AppError(400, 'Такая колонка уже существует')
     
     return await self.repository.create_column(column)
   
@@ -76,7 +76,7 @@ class KanbanService:
     exist_column = await self.repository.get_column_by_id(column_id, board_id)
     
     if exist_column is None:
-      raise AppError(400, f'Колонки з ID {column_id} не існує')
+      raise AppError(400, f'Колонки с ID {column_id} не существует')
     
     return await self.repository.delete_column(exist_column)
   
@@ -85,7 +85,7 @@ class KanbanService:
     exist_column = await self.repository.get_column_by_id(column_id, board_id)
     
     if not exist_column:
-      raise AppError(400, f'Неможливо створити картку, оскільки немає стовпчика з ID {column_id}')
+      raise AppError(400, f'Невозможно создать карточку, так как отсутствует столбец с ID {column_id}')
     
     return await self.repository.get_all_cards(column_id)
 
@@ -93,7 +93,7 @@ class KanbanService:
     exist_card = await self.repository.get_card_by_id(card_id, column_id)
     
     if not exist_card:
-      raise AppError(400, 'Такої картки не існує')
+      raise AppError(400, 'Такой карты не существует')
     
     return exist_card
   
@@ -101,7 +101,7 @@ class KanbanService:
     exist_card = await self.repository.get_card_by_title(card.title, column_id)
 
     if exist_card:
-      raise AppError(400, 'Така картка вже створена')
+      raise AppError(400, 'Такая карточка уже создана')
     
     return await self.repository.create_card(card, column_id, creator_id)
   
@@ -109,7 +109,7 @@ class KanbanService:
     exist_card = await self.repository.get_card_by_id(card_id, column_id)
 
     if exist_card is None:
-      raise AppError(400, f'Картки з ID {card_id} не існує')
+      raise AppError(400, f'Карточки с ID {card_id} не существует')
     
     return await self.repository.update_card(card_id, column_id , card, user_id)
   
@@ -120,6 +120,6 @@ class KanbanService:
     exist_card = await self.repository.get_card_by_id(card_id, column_id)
     
     if exist_card is None:
-      raise AppError(400, f'Картки з ID {card_id} не існує')
+      raise AppError(400, f'Карточки с ID {card_id} не существует')
     
     return await self.repository.delete_card(exist_card)

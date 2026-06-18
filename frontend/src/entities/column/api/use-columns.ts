@@ -1,14 +1,18 @@
 import { queryClient } from "@/shared/lib/query-client"
-import { kanbanService } from "@/services/kanban.service"
-import type { TColumn } from "@/types/kanban";
+import type { TColumn } from "../model/types";
 import { useMutation } from "@tanstack/react-query"
 import { AxiosError } from "axios";
 import { toast } from "sonner"
+import { useInjection } from "@/app/providers/di-provider";
+import { TTYPES } from "@/shared/di/types";
+import { ColumnService } from "./column.service";
 
 export const useColumnMutations = () => {
+  const columnService = useInjection<ColumnService>(TTYPES.ColumnService)
+
   const createMutation = useMutation({
     mutationFn: ({ data, boardId }: { data: { title: string }, boardId: number }) => 
-      kanbanService.createColumn(data.title, boardId),
+      columnService.createColumn(data.title, boardId),
     onSuccess: (data, variables) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['board-item', variables.boardId] });
@@ -22,7 +26,7 @@ export const useColumnMutations = () => {
 
   const updateMutation = useMutation({
     mutationFn: ({ data, columnId, boardId }: { data: { title: string, order: number }, columnId: number, boardId: number }) => 
-      kanbanService.updateColumn(data.title, data.order, columnId, boardId),
+      columnService.updateColumn(data.title, data.order, columnId, boardId),
     onSuccess: (data, variables) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['board-item', variables.boardId] });
@@ -37,7 +41,7 @@ export const useColumnMutations = () => {
 
   const deleteMutation = useMutation({
     mutationFn: ({ columnId, boardId }: { columnId: number, boardId: number }) => 
-      kanbanService.deleteColumn(boardId, columnId),
+      columnService.deleteColumn(boardId, columnId),
     onSuccess: (data, variables) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['board-item', variables.boardId] });
@@ -52,7 +56,7 @@ export const useColumnMutations = () => {
 
   const updateOrdersMutation = useMutation({
     mutationFn: ({boardId, columns}: {boardId: number, columns: TColumn[]}) => 
-      kanbanService.reorderColumns(boardId, columns),
+      columnService.reorderColumns(boardId, columns),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({queryKey: ['board-item', variables.boardId]})
     },

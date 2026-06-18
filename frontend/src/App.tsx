@@ -1,19 +1,22 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import ScreenLoader from './shared/screen-loader'
-import { useCheckAuth } from './app/hooks/queries/useAuth'
-import { authService } from './features/auth/api/auth.service'
+import { useAuth } from './app/providers/auth-provider'
+import { useInjection } from './app/providers/di-provider'
+import { TTYPES } from './shared/di/types'
+import { AuthService } from './features/auth/api/auth.service'
 
 const router = createRouter({
 	routeTree,
 	context: {
 		user: null,
-		service: authService,
+		service: undefined,
 	},
 })
 
 function App() {
-	const { data: user, isLoading } = useCheckAuth()
+	const { user, isLoading } = useAuth()
+	const authService = useInjection<AuthService>(TTYPES.AuthService)
 
 	if (isLoading) {
 		return <ScreenLoader />
@@ -22,11 +25,9 @@ function App() {
 	return (
 		<RouterProvider
 			router={router}
-			context={{ user }}
+			context={{ user, service: authService }}
 		/>
 	)
 }
 
 export default App
-
-// TODO Сделать возможность перетаскивать карточки по колонкам

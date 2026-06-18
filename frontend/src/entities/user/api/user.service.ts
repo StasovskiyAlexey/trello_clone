@@ -1,6 +1,5 @@
-import { axiosClient } from "@/shared/api/client";
 import type { TSuccessResponse } from "@/shared/model/response";
-import type { TUpdateUserAvatar, TUpdateUserPassword, TUser } from "@/types/user";
+import type { TUpdateUserAvatar, TUpdateUserPassword, TUser } from "../model/types";
 import { inject, injectable } from "inversify"
 import { TTYPES, type THttpClient } from "@/shared/di/types"
 
@@ -14,11 +13,12 @@ export class UserService {
     if (data.email) fd.append('email', data.email)
     if (data.avatarUrl) fd.append('avatar_url', data.avatarUrl as File)
     
-    return await this.http.patch<TSuccessResponse<TUser>>('/users/update_user/', fd, {
+    const res = await this.http.patch<TSuccessResponse<TUser>>('/users/update_user/', fd, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
+    return res.data
   }
 
   async updateUserAvatar(avatarUrl?: File | null) {
@@ -26,18 +26,21 @@ export class UserService {
 
     if (avatarUrl) fd.append('avatar_url', avatarUrl as File)
     
-    return await axiosClient.patch<TSuccessResponse<TUser>>('/users/update_user_avatar', fd, {
+    const res = await this.http.patch<TSuccessResponse<TUser>>('/users/update_user_avatar', fd, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
+    return res.data
   }
 
   async updatePassword({password, newPassword}: TUpdateUserPassword) {
-    return await axiosClient.patch<TSuccessResponse<TUser>>('/users/update_user_password', { password, new_password: newPassword })
+    const res = await this.http.patch<TSuccessResponse<TUser>>('/users/update_user_password', { password, new_password: newPassword })
+    return res.data
   }
 
-  async deleteAccount(): Promise<TSuccessResponse<TUser>> {
-    return await axiosClient.delete('/users/delete_user')
+  async deleteAccount() {
+    const res = await this.http.delete<TSuccessResponse<null>>('/users/delete_user')
+    return res.data
   }
 }

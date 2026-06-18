@@ -8,19 +8,20 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/shared/ui/avatar'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { getImageUrl } from '@/shared/lib/utils'
-import useModalStore from '@/store/modal.store'
 import { useUsers } from '@/entities/user/api/use-users'
-import { useCheckAuth } from '@/app/hooks/queries/useAuth'
+
+import { useModal } from '@/app/providers/modal-provider'
+import { useAuth } from '@/app/providers/auth-provider'
 
 const UpdateUserAvatarModal = lazy(() => import('@/entities/user/ui/modals/update-user-avatar-modal'))
 const ConfirmModal = lazy(() => import('@/widgets/modals/confrim-modal'))
 
 function Settings() {
 	const navigate = useNavigate()
-	const switcher = useModalStore((state) => state.switcher)
+	const { switcher } = useModal()
 
 	const { updateUserPassword, deleteUser, updateUserData } = useUsers()
-	const { data: user, isLoading } = useCheckAuth()
+	const { user, isLoading } = useAuth()
 
 	const userDefaultObj: {
 		id?: number
