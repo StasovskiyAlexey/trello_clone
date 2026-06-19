@@ -13,7 +13,7 @@ export default function BoardDetail() {
 	const boardId = parseInt(useParams({ strict: false }).boardId)
 	const router = useRouter()
 
-	const { data: board, isLoading, isFetching } = useBoard(boardId)
+	const { data: board } = useBoard(boardId)
 	const { mutate: reorderColumns } = useReordersColumns()
 	const { mutate: reordersCards } = useReordersCards(boardId)
 
@@ -77,9 +77,9 @@ export default function BoardDetail() {
 								{...provided.droppableProps}>
 								{/* Заглушка, если колонок ещё нет */}
 								{board?.columns?.length === 0 && (
-									<div className='flex w-full shrink-0 flex-col items-start justify-center rounded-xl border-2 border-dashed border-white/20 bg-white/5 p-4 text-center text-sm font-medium backdrop-blur-sm'>
+									<div className='flex w-full shrink-0 flex-col items-start justify-center rounded-xl border-2 border-dashed border-white/20 bg-white/5 p-4 text-center text-sm font-medium text-black backdrop-blur-sm'>
 										<span>У этой доски ещё нет колонок</span>
-										<span className='mt-1 text-xs text-white/40'>Создайте первую, чтобы начать работу</span>
+										<span className='mt-1 text-xs'>Создайте первую, чтобы начать работу</span>
 									</div>
 								)}
 								<div className='mt-6 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'>

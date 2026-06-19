@@ -2,8 +2,59 @@
 
 ### Интерактивный дашборд на стеке FastAPI + React, упакованный в Docker и оптимизированный для работы в среде Linux/WSL2.
 
-<img width="1920" height="953" alt="screencapture-127-0-0-1-5173-boards-2026-03-07-00_29_58" src="https://github.com/user-attachments/assets/915aab13-0acd-4321-b183-17df92f14edc" />
-<img width="1920" height="953" alt="screencapture-127-0-0-1-5173-boards-1-2026-03-07-00_26_20" src="https://github.com/user-attachments/assets/73f42969-72db-4846-9afc-ba9861a4c302" />
+## 🖼️ Интерфейс приложения (Screenshots)
+
+<p align="center">
+  Ниже представлены ключевые экраны приложения. Вы можете развернуть каждый блок, чтобы увидеть интерфейс системы.
+</p>
+
+---
+
+### 🔐 1. Аутентификация и Вход
+<details>
+<summary><b>Посмотреть экран авторизации (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/g4b66fmj8ww2yep8z8dny/auth.png?rlkey=je57a063gkta8qu97gv4qsna6&st=ohekg2ga&raw=1" width="500" alt="Страница авторизации" />
+</p>
+<p align="center"><i>Минималистичная форма входа и регистрации пользователя с валидацией полей.</i></p>
+</details>
+
+---
+
+### 📋 2. Главная панель (Рабочие пространства)
+<details>
+<summary><b>Посмотреть список досок (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/8793zo93aj8bxxk1282z2/boards.png?rlkey=nqtop7n0z3q0nxl0eza34218v&st=1afnlr2l&raw=1" width="100%" alt="Список досок" />
+</p>
+<p align="center"><i>Центральный дашборд со списком всех персональных и командных канбан-досок пользователя.</i></p>
+</details>
+
+---
+
+### ⚡ 3. Канбан-Доска (Управление задачами)
+<details>
+<summary><b>Посмотреть интерфейс доски (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/40sibsir7dcnjr8m8g1y0/board.png?rlkey=di9aefqt4ok0w0uvph0695w3k&st=q3u9qq12&raw=1" width="100%" alt="Канбан доска" />
+</p>
+<p align="center"><i>Рабочее пространство с колонками, карточками задач, тегами и возможностью интерактивного перемещения.</i></p>
+</details>
+
+---
+
+### ⚙️ 4. Настройки аккаунта
+<details>
+<summary><b>Посмотреть страницу настроек (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/8dazwr9sup9hy5wi9r2cx/settings.png?rlkey=b6t0ztn1zq1ggdtvdgp2nd9iz&st=578ka3nr&raw=1" width="100%" alt="Настройки профиля" />
+</p>
+<p align="center"><i>Панель управления профилем: изменение публичных данных, аватара, смена пароля и деструктивные действия.</i></p>
+</details>
 
 ---
 
@@ -87,4 +138,3 @@
 | **UI/UX** | Tailwind CSS 4, shadcn/ui, Lucide Icons |
 | **Security** | JWT (OAuth2), Passlib (bcrypt), HTTP-only Cookies |
 | **DevOps** | Docker, Docker Compose, Nginx (Reverse Proxy) |
-
