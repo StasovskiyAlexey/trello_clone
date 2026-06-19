@@ -1,1 +1,1 @@
-export {default as UpdateCardModal} from './ui/modals/update-card-modal'
+export {default as UpdateCardModal} from './ui/update-card-modal'

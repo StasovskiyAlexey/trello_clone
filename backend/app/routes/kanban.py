@@ -136,6 +136,6 @@ async def reoders_cards(column_id: int, new_column_id: int, card_id: int, new_or
 async def delete_card(card_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   deleted_card = await service.delete_card(column_id, card_id)
   return SuccessResponse(
-    message='Карточка успешно удаелна',
+    message='Карточка успешно удалена',
     data=deleted_card
   )

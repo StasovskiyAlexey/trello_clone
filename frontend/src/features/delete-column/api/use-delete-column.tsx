@@ -8,6 +8,7 @@ import { TTYPES } from '@/shared/di/types'
 
 export default function useDeleteColumn() {
 	const columnService = useInjection<ColumnService>(TTYPES.ColumnService)
+
 	return useMutation({
 		mutationFn: ({ columnId, boardId }: { columnId: number; boardId: number }) =>
 			columnService.deleteColumn(boardId, columnId),

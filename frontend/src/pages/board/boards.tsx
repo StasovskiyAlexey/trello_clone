@@ -1,7 +1,7 @@
 import { BoardCard } from '@/entities/board'
 import { useBoardsList } from '@/entities/board'
 import { CreateBoardBtn } from '@/features/create-board'
-import { Skeleton } from '@/shared/ui'
+import { Spinner } from '@/shared/ui'
 
 export default function Boards() {
 	const { data, isLoading } = useBoardsList()
@@ -32,7 +32,7 @@ export default function Boards() {
 				</header>
 
 				{/* Сетка досок (Четкая структура вместо flex-wrap) */}
-				<div className='mt-6 grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'>
+				<div className='mt-6'>
 					{/* Красивое пустое состояние (Empty State) */}
 					{!isLoading && !data?.length && (
 						<div className='col-span-full flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-12 text-center'>
@@ -60,23 +60,19 @@ export default function Boards() {
 
 					{/* Вывод карточек */}
 					{isLoading ? (
-						<div className='grid h-full w-full grid-cols-[repeat(auto-fill,minmax(380px,1fr))] flex-wrap justify-center gap-4'>
-							{/* <Spinner /> */}
-							{Array.from({ length: 9 }).map((_, i) => (
-								<Skeleton
-									className='h-44 w-full max-w-120 rounded-xl bg-gray-200'
-									key={i}
-								/>
-							))}
+						<div className='mt-6 flex flex-wrap items-center justify-center gap-4'>
+							<Spinner />
 						</div>
 					) : (
-						data &&
-						data?.map((board) => (
-							<BoardCard
-								key={board?.id}
-								board={board}
-							/>
-						))
+						<div className='mt-6 grid grid-cols-[repeat(auto-fill,minmax(380px,1fr))] gap-4'>
+							{data &&
+								data?.map((board) => (
+									<BoardCard
+										key={board?.id}
+										board={board}
+									/>
+								))}
+						</div>
 					)}
 				</div>
 			</div>

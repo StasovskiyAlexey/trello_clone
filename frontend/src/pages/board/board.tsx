@@ -2,22 +2,20 @@ import { Button } from '@/shared/ui/button'
 import { useBoard } from '@/entities/board/api/use-boards'
 import { useParams, useRouter } from '@tanstack/react-router'
 import { MoveLeft } from 'lucide-react'
-import { lazy, Suspense } from 'react'
 import { Column } from '@/entities/column'
-
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 import type { TColumn } from '@/entities/column'
-import { useCardMutations } from '@/entities/card/api/use-cards'
-
 import { CreateColumnBtn } from '@/features/create-column'
+import { useReordersColumns } from '@/features/reorders-columns'
+import { useReordersCards } from '@/features/reorders-cards'
 
 export default function BoardDetail() {
 	const boardId = parseInt(useParams({ strict: false }).boardId)
 	const router = useRouter()
 
 	const { data: board, isLoading, isFetching } = useBoard(boardId)
-	// const { reorderColumns } = useColumnMutations()
-	// const { reordersCards } = useCardMutations()
+	const { mutate: reorderColumns } = useReordersColumns()
+	const { mutate: reordersCards } = useReordersCards(boardId)
 
 	async function handleDragEnd(result: any) {
 		const { destination, source } = result
@@ -30,7 +28,7 @@ export default function BoardDetail() {
 			const [moved] = newColumns.splice(source.index, 1)
 			newColumns.splice(destination.index, 0, moved)
 
-			// reorderColumns({ boardId, columns: newColumns })
+			reorderColumns({ boardId, columns: newColumns })
 		}
 
 		if (result.type === 'card') {
@@ -39,7 +37,7 @@ export default function BoardDetail() {
 			const secondColumnId = Number(destination.droppableId.slice(7))
 			const newOrder = Number(destination.index + 1)
 
-			// reordersCards({ columnId: firstColumnId, newColumnId: secondColumnId, cardId, newOrder })
+			reordersCards({ columnId: firstColumnId, newColumnId: secondColumnId, cardId, newOrder })
 		}
 	}
 
@@ -84,7 +82,6 @@ export default function BoardDetail() {
 										<span className='mt-1 text-xs text-white/40'>Создайте первую, чтобы начать работу</span>
 									</div>
 								)}
-
 								<div className='mt-6 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'>
 									{board?.columns?.map((column, index) => (
 										<Column

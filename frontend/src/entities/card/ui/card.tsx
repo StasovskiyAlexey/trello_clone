@@ -1,12 +1,11 @@
 import { getImageUrl, parseData } from '@/shared/lib/utils'
 import type { TCard } from '../model/types'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui'
-import { useCardMutations } from '@/entities/card/api/use-cards'
-import { AlignLeft, Calendar, Trash2 } from 'lucide-react'
-import { Button } from '@/shared/ui'
+import { AlignLeft, Calendar } from 'lucide-react'
 import { Draggable } from '@hello-pangea/dnd'
 import { useAuth } from '@/app/providers/auth-provider'
 import { useModal } from '@/app/providers/modal-provider'
+import { DeleteCardButton } from '@/features/delete-card'
 
 export default function Card({
 	boardId,
@@ -21,7 +20,6 @@ export default function Card({
 }) {
 	const { user } = useAuth()
 	const { switcher } = useModal()
-	const { deleteCard } = useCardMutations()
 
 	return (
 		<Draggable
@@ -40,16 +38,11 @@ export default function Card({
 						<h3 className='flex-1 text-sm leading-snug font-medium wrap-break-word text-[#172b4d]'>{card?.title}</h3>
 
 						{/* Кнопка удаления аккуратно вписана в правый угол и появляется при наведении */}
-						<Button
-							variant='ghost'
-							size='icon'
-							onClick={(e) => {
-								e.stopPropagation() // Предотвращаем открытие модалки карточки
-								deleteCard({ columnId, cardId: card?.id as number })
-							}}
-							className='h-6 w-6 shrink-0 rounded-md border-none text-slate-400 opacity-0 shadow-none transition-opacity duration-150 group-hover:opacity-100 hover:bg-red-50 hover:text-red-600'>
-							<Trash2 size={13} />
-						</Button>
+						<DeleteCardButton
+							card={card}
+							boardId={boardId}
+							columnId={columnId}
+						/>
 					</div>
 
 					{/* Индикатор наличия описания (как в оригинальном Trello) */}

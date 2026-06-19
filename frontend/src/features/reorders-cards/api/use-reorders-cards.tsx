@@ -1,30 +1,30 @@
 import { useInjection } from '@/app/providers/di-provider'
-import { CardService } from '@/entities/card/api/card.service'
+import type { CardService } from '@/entities/card/api/card.service'
 import { TTYPES } from '@/shared/di/types'
 import { queryClient } from '@/shared/lib/query-client'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
-// TODO Здесь не обновляются карточки сразу после изменения(баг скорее всего на беке)
-
-export default function useUpdateCard({ boardId }: { boardId: number }) {
+export default function useReordersCards(boardId: number) {
 	const cardService = useInjection<CardService>(TTYPES.CardService)
 
 	return useMutation({
 		mutationFn: ({
 			columnId,
+			newColumnId,
 			cardId,
-			data,
+			newOrder,
 		}: {
 			columnId: number
+			newColumnId: number
 			cardId: number
-			data: { title: string; description: string; order: number }
-		}) => cardService.updateCard(columnId, cardId, data),
-		onSuccess: (data) => {
-			toast.success(data.message)
+			newOrder: number
+		}) => {
+			return cardService.reordersCards({ columnId, newColumnId, cardId, newOrder })
+		},
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['board', boardId] })
-			console.log('Обновилось')
 		},
 		onError: (error) => {
 			if (error instanceof AxiosError) {

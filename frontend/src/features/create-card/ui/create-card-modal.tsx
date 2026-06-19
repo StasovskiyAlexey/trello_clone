@@ -6,7 +6,7 @@ import { Textarea } from '@/shared/ui'
 import { Button } from '@/shared/ui'
 import { useEffect, useState, type FormEvent } from 'react'
 import { useModal } from '@/app/providers/modal-provider'
-import useCreateCard from '../../api/use-create-card'
+import useCreateCard from '../api/use-create-card'
 
 export default function CreateCardModal() {
 	const [card, setCard] = useState<{ title: string; description: string }>({

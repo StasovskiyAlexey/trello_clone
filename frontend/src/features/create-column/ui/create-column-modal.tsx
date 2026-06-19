@@ -5,7 +5,7 @@ import { Input } from '@/shared/ui'
 import { Button } from '@/shared/ui'
 import { useState, type FormEvent } from 'react'
 import { useModal } from '@/app/providers/modal-provider'
-import useCreateColumn from '../../api/use-create-column'
+import useCreateColumn from '../api/use-create-column'
 
 export default function CreateColumnModal() {
 	const [column, setColumn] = useState({

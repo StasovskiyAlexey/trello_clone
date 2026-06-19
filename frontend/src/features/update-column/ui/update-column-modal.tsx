@@ -3,9 +3,9 @@ import { Pencil, Save } from 'lucide-react'
 import { Label } from '@/shared/ui'
 import { Input } from '@/shared/ui'
 import { Button } from '@/shared/ui'
-import { useColumnMutations } from '@/entities/column/api/use-columns'
 import { useEffect, useState, type FormEvent } from 'react'
 import { useModal } from '@/app/providers/modal-provider'
+import useUpdateColumn from '../api/use-update-column'
 
 export default function UpdateColumnModal() {
 	const [title, setTitle] = useState('')
@@ -14,11 +14,11 @@ export default function UpdateColumnModal() {
 	const column = modals.isOpenUpdateColumn.props?.column
 	const boardId = Number(modals.isOpenUpdateColumn.props?.boardId)
 
-	const { updateColumn } = useColumnMutations()
+	const { mutate } = useUpdateColumn()
 
 	function handleUpdate(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
-		updateColumn({ data: { title: title, order: 1 }, columnId: column?.id, boardId })
+		mutate({ data: { title: title, order: 1 }, columnId: column?.id, boardId })
 		switcher('isOpenUpdateColumn', false)
 	}
 

@@ -37,7 +37,7 @@ export const Sidebar = () => {
 
 			{/* Navigation */}
 			<nav className='mt-4 flex-1 px-4'>
-				<ul className='space-y-2'>
+				<ul className='space-y-1'>
 					{menuItems.map((item) => {
 						return (
 							<li key={item.label}>
@@ -62,21 +62,17 @@ export const Sidebar = () => {
 			{/* User */}
 			<div className='flex items-center justify-between border-t p-4'>
 				<div className='flex items-center gap-3'>
-					<Avatar className='h-11 w-11'>
-						<AvatarImage
-							src={
-								user?.avatar_url
-									? getImageUrl(user.avatar_url)
-									: 'https://img.icons8.com/ios-filled/100/user-male-circle.png'
-							}
-						/>
+					<Avatar className='size-8'>
+						<AvatarImage src={user?.avatar_url ? getImageUrl(user.avatar_url) : ''} />
 						<AvatarFallback>{user?.login?.slice(0, 2).toUpperCase()}</AvatarFallback>
 					</Avatar>
 
 					<div className='min-w-0 flex-1'>
 						<p className='truncate text-sm font-semibold text-slate-900'>{user?.login}</p>
 
-						<p className='truncate text-xs text-slate-500'>{user?.email}</p>
+						<p className='truncate text-xs text-slate-500'>
+							{user!.email!.length > 10 ? user?.email.slice(0, 15) + '...' : user?.email}
+						</p>
 					</div>
 				</div>
 

@@ -6,7 +6,7 @@ import { Button } from '@/shared/ui'
 import { useEffect, useState, type FormEvent } from 'react'
 import { useModal } from '@/app/providers/modal-provider'
 import { useAuth } from '@/app/providers/auth-provider'
-import useCreateBoard from '../../api/use-create-board'
+import useCreateBoard from '../api/use-create-board'
 
 export default function CreateBoardModal() {
 	const [board, setBoard] = useState<{ title: string }>({

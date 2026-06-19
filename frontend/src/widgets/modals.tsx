@@ -11,6 +11,10 @@ const isOpenUpdateColumn = lazy(() =>
 )
 const isOpenCreateCard = lazy(() => import('@/features/create-card').then((m) => ({ default: m.CreateCardModal })))
 const isOpenUpdateCard = lazy(() => import('@/features/update-card').then((m) => ({ default: m.UpdateCardModal })))
+const isOpenConfirmModal = lazy(() => import('./modals/confirm-modal').then((m) => ({ default: m.default })))
+const isOpenUpdateAvatar = lazy(() =>
+	import('@/features/update-profile/ui/update-user-avatar-modal').then((m) => ({ default: m.default })),
+)
 
 const modalsMap: Record<string, React.ComponentType> = {
 	isOpenCreateBoard,
@@ -19,6 +23,8 @@ const modalsMap: Record<string, React.ComponentType> = {
 	isOpenUpdateColumn,
 	isOpenCreateCard,
 	isOpenUpdateCard,
+	isOpenConfirmModal,
+	isOpenUpdateAvatar,
 }
 
 export default function Modals() {

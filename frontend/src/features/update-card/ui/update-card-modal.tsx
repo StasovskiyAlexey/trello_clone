@@ -6,7 +6,7 @@ import { Input } from '@/shared/ui'
 import { Textarea } from '@/shared/ui'
 import { Button } from '@/shared/ui'
 import { useModal } from '@/app/providers/modal-provider'
-import useUpdateCard from '../../api/use-update-card'
+import useUpdateCard from '../api/use-update-card'
 
 export default function UpdateCardModal() {
 	const [card, setCard] = useState({

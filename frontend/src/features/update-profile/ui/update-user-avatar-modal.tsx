@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/shared/ui'
+import { Button } from '@/shared/ui'
+import { Input } from '@/shared/ui'
 import { Upload } from 'lucide-react'
-import { Label } from '../ui/label'
-import useModalStore from '@/store/modal.store'
-import { useUsers } from '@/entities/user/api/use-users'
+import { Label } from '@/shared/ui'
+import { useModal } from '@/app/providers/modal-provider'
+import useUpdateAvatar from '../api/use-update-avatar'
 
 export default function UpdateUserAvatarModal() {
 	const [file, setFile] = useState<File | null | undefined>(null)
 	const [preview, setPreview] = useState<string | null>(null)
 
-	const { updateUserAvatar } = useUsers()
-	const { switcher, modals } = useModalStore()
+	const { mutate } = useUpdateAvatar()
+	const { switcher, modals } = useModal()
 
 	const updateAvatar = async () => {
-		await updateUserAvatar({ avatarUrl: file })
+		mutate({ avatarUrl: file })
 		switcher('isOpenUpdateAvatar', false)
 	}
 
@@ -73,7 +73,7 @@ export default function UpdateUserAvatarModal() {
 						type='submit'
 						onClick={() => updateAvatar()}
 						disabled={file === null}>
-						Зберегти зміни
+						Сохранить изменения
 					</Button>
 				</DialogFooter>
 			</DialogContent>
