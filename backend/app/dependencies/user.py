@@ -6,13 +6,13 @@ from ..core.db import get_db
 from ..models.user import User
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..repository.user_repository import UserRepository
+from ..repository.user import UserRepository
 from ..services.user import UserService
 from ..core.auth import oauth2_scheme
 
 async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)):
   token = get_token(request)
-  print(token)
+
   if not token:
     raise AppError(401, 'Користувач не авторизований')
   
@@ -25,10 +25,6 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
     raise AppError(401, "Користувач не знайдений")
 
   return user
-
-# Зависимость для использовать БД в сервисе
-def get_user_service(db: AsyncSession = Depends(get_db)):
-  return UserService(UserRepository(db))
 
 # async def get_current_user(token = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
 #   print(oauth2_scheme)

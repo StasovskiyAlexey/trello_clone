@@ -1,6 +1,6 @@
-from ..models.user import User
-from app.models.kanban import Board
-from app.models.kanban import Column
-from app.models.kanban import Card
+from app.models.user import User
+from app.models.board import Board
+from app.models.column import Column
+from app.models.card import Card
 
 __all__ = ['User', 'Board', 'Column', 'Card']

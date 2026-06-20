@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from .routes import user, kanban
+from .routes import user_router, column_router, board_router, card_router
 from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
 
@@ -20,9 +20,7 @@ app.add_middleware(
 
 app.mount("/images", StaticFiles(directory="/app/images"), name="images")
 
-@app.get('/')
-async def health():
-    return {'status': 'ok', 'message': 'Сервер работает'}
-
-app.include_router(user.router)
-app.include_router(kanban.router)
+app.include_router(user_router)
+app.include_router(column_router)
+app.include_router(board_router)
+app.include_router(card_router)

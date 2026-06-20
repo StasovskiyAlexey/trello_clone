@@ -7,7 +7,7 @@ from ..core.auth import create_token, hash_password, verify_password
 from ..core.exceptions import AppError
 from ..models.user import User
 from ..schemas.user import UserCreate, UserLogin, UserUpdate
-from ..repository.user_repository import UserRepository
+from ..repository.user import UserRepository
 
 class UserService:
   def __init__(self, repository: UserRepository):
