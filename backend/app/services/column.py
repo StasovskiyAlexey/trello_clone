@@ -25,14 +25,6 @@ class ColumnService:
     return exist_column
   
   async def create_column(self, column: ColumnCreate):
-    # if column.board_id is None and column.board_id <= 0:
-    #   raise AppError(400, f'НСоздать колнку с использованием идентификатора доски невозможно {column.board_id}')
-    
-    exist_column = await self.repository.get_column_by_title(column.title, column.board_id)
-    
-    if exist_column:
-      raise AppError(400, 'Такая колонка уже существует')
-    
     return await self.repository.create_column(column)
   
   async def update_column(self, column_id: int, column: ColumnUpdate, board_id: int):

@@ -5,7 +5,7 @@ import ScreenLoader from '@/shared/screen-loader'
 export const Route = createFileRoute('/boards/')({
 	loader: () => <ScreenLoader />,
 	beforeLoad: async ({ context }) => {
-		const user = await context.service.me()
+		const user = await context.service?.me()
 
 		if (!user) {
 			throw redirect({

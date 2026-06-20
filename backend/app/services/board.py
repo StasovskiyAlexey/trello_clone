@@ -11,7 +11,7 @@ class BoardService:
   
   async def get_board_by_id(self, owner_id: int, board_id: int):
     board = await self.repository.get_board_by_id(owner_id, board_id)
-    
+
     if not board:
       raise AppError(400, f'Доску с ID {board_id} не найдено')
     

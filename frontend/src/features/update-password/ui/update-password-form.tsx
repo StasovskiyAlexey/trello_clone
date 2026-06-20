@@ -2,11 +2,17 @@ import type { TUpdateUserPassword } from '@/entities/user'
 import { Input, Label } from '@/shared/ui'
 import { useState } from 'react'
 import UpdatePasswordButton from './update-password-button'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function UpdatePasswordForm() {
 	const [userData, setUserData] = useState<TUpdateUserPassword>({
 		password: '',
 		newPassword: '',
+	})
+
+	const [isOpenPassword, setIsOpenPassword] = useState({
+		password: false,
+		newPassword: false,
 	})
 
 	return (
@@ -25,14 +31,21 @@ export default function UpdatePasswordForm() {
 						className='text-sm font-semibold text-slate-700'>
 						Текущий пароль
 					</Label>
-					<Input
-						value={userData.password || ''}
-						onChange={(e) => setUserData((prevState) => ({ ...prevState, password: e.target.value }))}
-						placeholder='Введите действующий пароль'
-						id='current-password'
-						type='password'
-						className='border-slate-200 focus-visible:ring-blue-500'
-					/>
+					<div className='relative'>
+						<button
+							onClick={() => setIsOpenPassword((state) => ({ ...state, password: !state.password }))}
+							className='absolute top-2 right-2'>
+							{isOpenPassword.password ? <EyeOff size={20} /> : <Eye size={20} />}
+						</button>
+						<Input
+							value={userData.password || ''}
+							onChange={(e) => setUserData((prevState) => ({ ...prevState, password: e.target.value }))}
+							placeholder='Введите действующий пароль'
+							id='current-password'
+							type={isOpenPassword.password ? 'text' : 'password'}
+							className='border-slate-200 focus-visible:ring-blue-500'
+						/>
+					</div>
 				</div>
 				<div className='grid gap-2'>
 					<Label
@@ -40,14 +53,21 @@ export default function UpdatePasswordForm() {
 						className='text-sm font-semibold text-slate-700'>
 						Новый пароль
 					</Label>
-					<Input
-						value={userData.newPassword || ''}
-						onChange={(e) => setUserData((prevState) => ({ ...prevState, newPassword: e.target.value }))}
-						placeholder='Придумайте новый сложный пароль'
-						id='new-password'
-						type='password'
-						className='border-slate-200 focus-visible:ring-blue-500'
-					/>
+					<div className='relative'>
+						<button
+							onClick={() => setIsOpenPassword((state) => ({ ...state, newPassword: !state.newPassword }))}
+							className='absolute top-2 right-2'>
+							{isOpenPassword.newPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+						</button>
+						<Input
+							value={userData.newPassword || ''}
+							onChange={(e) => setUserData((prevState) => ({ ...prevState, newPassword: e.target.value }))}
+							placeholder='Придумайте новый сложный пароль'
+							id='new-password'
+							type={isOpenPassword.newPassword ? 'text' : 'password'}
+							className='border-slate-200 focus-visible:ring-blue-500'
+						/>
+					</div>
 				</div>
 				<UpdatePasswordButton
 					action={() => setUserData((state) => ({ ...state, password: '', newPassword: '' }))}

@@ -15,12 +15,12 @@ async def get_cards(board_id: int, column_id: int, service: CardService = Depend
     data=cards
   )
 
-@card_router.post('/get_card_by_id', response_model=SuccessResponse[CardResponse])
-async def get_card(card_id: int, column_id: int, service: CardService = Depends(get_card_service)):
-  card = await service.get_card_by_id(card_id, column_id)
-  return SuccessResponse( 
-    data=card
-  )
+# @card_router.post('/get_card_by_id', response_model=SuccessResponse[CardResponse])
+# async def get_card(card_id: int, column_id: int, service: CardService = Depends(get_card_service)):
+#   card = await service.get_card_by_id(card_id, column_id)
+#   return SuccessResponse( 
+#     data=card
+#   )
 
 @card_router.post('/create_card', response_model=SuccessResponse[CardResponse])
 async def create_card(card_data: CardCreate, column_id: int, user: User = Depends(get_current_user), service: CardService = Depends(get_card_service)):

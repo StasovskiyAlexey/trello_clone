@@ -13,6 +13,7 @@ export default function useCreateColumn() {
 		mutationFn: ({ data, boardId }: { data: { title: string }; boardId: number }) =>
 			columnService.createColumn(data.title, boardId),
 		onSuccess: (data, variables) => {
+			console.log(data)
 			toast.success(data.message)
 			queryClient.invalidateQueries({ queryKey: ['board', variables.boardId] })
 		},

@@ -15,7 +15,7 @@
 <summary><b>Посмотреть экран авторизации (Нажмите, чтобы развернуть)</b></summary>
 <br />
 <p align="center">
-  <img src="https://www.dropbox.com/scl/fi/g4b66fmj8ww2yep8z8dny/auth.png?rlkey=je57a063gkta8qu97gv4qsna6&st=ohekg2ga&raw=1" width="500" alt="Страница авторизации" />
+  <img src="https://www.dropbox.com/scl/fi/n2jzj0yoy10556sxtdo6m/auth?rlkey=vezei3gdjnsmug4iv432ph00l&st=ojmw1uzo&raw=1" width="100%" alt="Страница авторизации" />
 </p>
 <p align="center"><i>Минималистичная форма входа и регистрации пользователя с валидацией полей.</i></p>
 </details>

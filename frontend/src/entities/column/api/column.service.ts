@@ -7,29 +7,13 @@ import { TTYPES, type THttpClient } from "@/shared/di/types"
 @injectable()
 export class ColumnService {
   constructor(@inject(TTYPES.HttpClient) private http: THttpClient) {}
-  async getColumns(boardId?: number) {
-    return await this.http.get<TSuccessResponse<TColumn[]>>('/kanban/get_columns', {
-      params: {
-        board_id: boardId
-      }
-    })
-  }
-
-  async getColumn(boardId?: number, columnId?: number) {
-    return await this.http.get<TSuccessResponse<TColumn>>('/kanban/get_column_by_id', {
-      params: {
-        board_id: boardId,
-        column_id: columnId
-      }
-    })
-  }
 
   async createColumn(title: string, boardId: number) {
-    return await axiosClient.post<TSuccessResponse<TColumn>>('/kanban/create_column', {title, board_id: boardId})
+    return await axiosClient.post<TSuccessResponse<TColumn>>('/columns/create_column', {title, board_id: boardId})
   }
 
   async updateColumn(title: string, order: number, columnId: number, boardId: number) {
-    return await this.http.patch<TSuccessResponse<TColumn>>('/kanban/update_column', {title, order}, {
+    return await this.http.patch<TSuccessResponse<TColumn>>('/columns/update_column', {title, order}, {
       params: {
         column_id: columnId,
         board_id: boardId
@@ -38,7 +22,7 @@ export class ColumnService {
   }
 
   async reorderColumns(boardId: number, columns: TColumn[]) {
-    return await this.http.patch<TSuccessResponse<TColumn[]>>('/kanban/update_order_columns', {columns: columns}, {
+    return await this.http.patch<TSuccessResponse<TColumn[]>>('/columns/update_order_columns', {columns: columns}, {
       params: {
         board_id: boardId
       }
@@ -46,6 +30,6 @@ export class ColumnService {
   }
 
   async deleteColumn(boardId: number, columnId: number) {
-    return await axiosClient.delete<TSuccessResponse<TColumn>>('/kanban/delete_column', {params: {board_id: boardId, column_id: columnId}})
+    return await axiosClient.delete<TSuccessResponse<TColumn>>('/columns/delete_column', {params: {board_id: boardId, column_id: columnId}})
   }
 }

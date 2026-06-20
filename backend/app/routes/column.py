@@ -6,21 +6,7 @@ from app.services import ColumnService
 from app.dependencies.services import get_column_service
 from app.dependencies.user import get_current_user
 
-column_router = APIRouter(prefix='/api/v1/column', tags=['columns'])
-
-@column_router.get('/get_columns', response_model=SuccessResponse[list[ColumnResponse]])
-async def get_columns(board_id: int, user: User = Depends(get_current_user), service: ColumnService = Depends(get_column_service)):
-  columns = await service.get_all_columns(board_id, user.id)
-  return SuccessResponse(
-    data=columns
-  )
-
-@column_router.post('/get_column_by_id', response_model=SuccessResponse[ColumnResponse])
-async def get_column(board_id: int, column_id: int, service: ColumnService = Depends(get_column_service)):
-  column = await service.get_column_by_id(column_id, board_id)
-  return SuccessResponse(
-    data=column
-  )
+column_router = APIRouter(prefix='/api/v1/columns', tags=['columns'])
 
 @column_router.post('/create_column', response_model=SuccessResponse[ColumnResponse])
 async def create_column(column_data: ColumnCreate, service: ColumnService = Depends(get_column_service)):

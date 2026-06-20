@@ -1,9 +1,7 @@
 import { Separator } from '@/shared/ui/separator'
 import { UpdatePasswordForm } from '@/features/update-password'
-import { DeleteUserButton } from '@/features/delete-profile'
+import { DeleteUserForm } from '@/features/delete-profile'
 import { UpdateUserForm } from '@/features/update-profile'
-
-// const UpdateUserAvatarModal = lazy(() => import('@/entities/user/ui/modals/update-user-avatar-modal'))
 
 function Settings() {
 	return (
@@ -27,17 +25,7 @@ function Settings() {
 						<UpdatePasswordForm />
 
 						{/* КАРТОЧКА 3: Опасная зона (Удаление) */}
-						<div className='space-y-4 rounded-xl border border-red-200 bg-red-50/50 p-6 shadow-sm'>
-							<div>
-								<h3 className='text-lg font-semibold text-red-800'>Опасная зона</h3>
-								<p className='mt-0.5 text-sm text-red-600'>
-									После удаления аккаунта все ваши личные доски, карточки и история активности будут стерты навсегда.
-								</p>
-							</div>
-							<div className='pt-2'>
-								<DeleteUserButton />
-							</div>
-						</div>
+						<DeleteUserForm />
 					</div>
 				</div>
 			</div>

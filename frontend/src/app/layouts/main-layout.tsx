@@ -9,16 +9,18 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
 	const { user } = useAuth()
 	const { width } = useMobile()
 
-	const isMobile = width > 768
+	const isMobile = width < 768
 
 	return (
 		<>
 			<Toaster position='top-center' />
 			<div className={`flex h-screen w-full overflow-hidden`}>
-				{user && isMobile && <Sidebar />}
-				{user && isMobile && <MobileMenu />}
+				{user && !isMobile && <Sidebar />}
 
-				<main className='relative h-screen min-w-0 flex-1 overflow-y-auto bg-gray-100 p-4'>{children}</main>
+				<main className='relative h-screen min-w-0 flex-1 overflow-y-auto bg-gray-100 p-4'>
+					{isMobile && <MobileMenu />}
+					{children}
+				</main>
 			</div>
 		</>
 	)

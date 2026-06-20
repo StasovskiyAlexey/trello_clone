@@ -18,6 +18,7 @@ async def get_boards(user: User = Depends(get_current_user), service: BoardServi
 @board_router.post('/get_board_by_id', response_model=SuccessResponse[BoardResponse])
 async def get_board_by_id(board_id: int, user: User = Depends(get_current_user), service: BoardService = Depends(get_board_service)):
   board = await service.get_board_by_id(user.id, board_id)
+  
   return SuccessResponse(
     data=board
   )

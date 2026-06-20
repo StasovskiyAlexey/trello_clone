@@ -14,6 +14,7 @@ export default function BoardDetail() {
 	const router = useRouter()
 
 	const { data: board } = useBoard(boardId)
+	console.log(board)
 	const { mutate: reorderColumns } = useReordersColumns()
 	const { mutate: reordersCards } = useReordersCards(boardId)
 

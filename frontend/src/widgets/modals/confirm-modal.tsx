@@ -16,13 +16,17 @@ export default function ConfirmModal() {
 	const action = modals.isOpenConfirmModal.props?.action
 
 	// Для сброса данных или еще чего-то
-	const event: () => void = modals.isOpenConfirmModal.props?.event
+	const event = modals.isOpenConfirmModal.props?.event
 
 	const handleConfirm = () => {
 		if (action) {
 			action()
 		}
-		event()
+
+		if (event) {
+			event()
+		}
+
 		switcher('isOpenConfirmModal', false)
 	}
 

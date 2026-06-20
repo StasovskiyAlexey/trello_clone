@@ -15,12 +15,10 @@ class CardRepository:
     cards = await self.db.scalars(query)
     return cards.all()
   
-  
   async def get_card_by_id(self, card_id: int, column_id: int):
     query = (select(Card)).filter_by(id=card_id, column_id=column_id)
     card = await self.db.scalar(query)
     return card
-  
 
   async def get_card_by_column(self, column_id: int):
     query = select(Card).where(Card.column_id == column_id)
@@ -40,9 +38,9 @@ class CardRepository:
     order = (last_order.order + 1) if last_order is not None else 1
     
     new_card = Card(title=card.title, description=card.description, column_id=column_id, order=order, creator_id=creator_id)
-    self.db.add(new_card)
-    
+    print(new_card, '3123112312')
     try:
+      self.db.add(new_card)
       await self.db.commit()
       query = (select(Card).where(Card.id == new_card.id))
       result = await self.db.execute(query)

@@ -16,12 +16,10 @@ class BoardRepository:
     boards = await self.db.scalars(query)
     return boards.all()
   
-  
   async def get_board_by_id(self, owner_id: int, board_id: int):
     query = select(Board).filter_by(owner_id=owner_id, id=board_id).options(selectinload(Board.columns).selectinload(Column.cards))
     board = await self.db.scalar(query)
     return board
-  
   
   async def get_board_by_title(self, owner_id: int, title: str):
     query = (select(Board)).filter_by(owner_id=owner_id, title=title).options(selectinload(Board.columns).selectinload(Column.cards))

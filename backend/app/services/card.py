@@ -24,11 +24,6 @@ class CardService:
     return exist_card
   
   async def create_card(self, card: CardCreate, column_id: int, creator_id: int):
-    exist_card = await self.repository.get_card_by_title(card.title, column_id)
-
-    if exist_card:
-      raise AppError(400, 'Такая карточка уже создана')
-    
     return await self.repository.create_card(card, column_id, creator_id)
   
   async def update_card(self, card_id: int, column_id: int, card: CardUpdate, user_id: int):

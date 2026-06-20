@@ -1,8 +1,8 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs'
 import { useEffect, useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
-import AuthForm from './auth-form'
 import { useAuth } from '@/app/providers/auth-provider'
+import { AuthForm } from '@/features/auth'
 
 const AuthPage = () => {
 	const [activeTab, setActiveTab] = useState<'login' | 'register'>()
@@ -16,21 +16,21 @@ const AuthPage = () => {
 	const inputs = [
 		{
 			label: 'Логін',
-			errorMessage: "Логін повинен бути обов'язковим",
+			errorMessage: 'Логин должен быть обязательным',
 			type: 'login',
-			placeholder: 'Введіть ваш логін',
+			placeholder: 'Введите ваш логин',
 		},
 		{
 			label: 'Email',
-			errorMessage: "Email повинен бути обов'язковим",
+			errorMessage: 'Email должен быть обязательным',
 			type: 'email',
-			placeholder: 'Введіть email',
+			placeholder: 'Введите email',
 		},
 		{
 			label: 'Пароль',
-			errorMessage: "Пароль повинен бути обов'язковим",
+			errorMessage: 'Пароль должен быть обязательным',
 			type: 'password',
-			placeholder: 'Введіть пароль',
+			placeholder: 'Введите пароль',
 		},
 	]
 
@@ -65,13 +65,13 @@ const AuthPage = () => {
 								onClick={() => setActiveTab('login')}
 								value='login'
 								className='rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-sm'>
-								Логін
+								Логин
 							</TabsTrigger>
 							<TabsTrigger
 								onClick={() => setActiveTab('register')}
 								value='register'
 								className='rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-sm'>
-								Реєстрація
+								Регистрация
 							</TabsTrigger>
 						</TabsList>
 

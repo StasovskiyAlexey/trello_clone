@@ -3,8 +3,8 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/auth')({
 	beforeLoad: async ({ context }) => {
-		const user = await context.service.me()
-		console.log(user)
+		const user = await context.service?.me()
+
 		if (user) {
 			throw redirect({
 				to: '/',
