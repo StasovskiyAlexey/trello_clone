@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 class CardBase(BaseModel):
   title: str = Field(...)
@@ -23,7 +23,7 @@ class CardUpdate(CardCreate):
 class CardResponse(BaseModel):
   id: int = Field(...)
   title: str = Field(...)
-  description: str = Field(...)
+  description: Optional[str] = None
   order: int = Field(...)
   creator_id: int = Field(...)
   column_id: int = Field(...)
